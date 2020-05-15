@@ -24,7 +24,7 @@ namespace dataStructures {
         form.addEventListener("change", handleChange);
     }
 
-    function createCheckbox(_div: HTMLDivElement, _category: string): HTMLLabelElement {
+    function createCheckbox(_div: HTMLDivElement, _category: string): void {
         for (let index in data[_category]) {
             let item: Item = data[_category][index];
 
