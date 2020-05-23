@@ -14,7 +14,7 @@ namespace A05 {
 
     async function main(): Promise<void> {
 
-        let response: Response = await fetch("https://github.com/geibelan/EIA2_New/blob/master/A05/data.json");
+        let response: Response = await fetch("https://geibelan.github.io/EIA2_New/A05/data.json");
         let offer: string = await response.text();
         data = JSON.parse(offer);
 
