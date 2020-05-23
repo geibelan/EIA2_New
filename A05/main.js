@@ -4,7 +4,7 @@ var A05;
     let form;
     let data;
     async function main() {
-        let response = await fetch("Data.json");
+        let response = await fetch("https://github.com/geibelan/EIA2_New/blob/master/A05/data.json");
         let offer = await response.text();
         data = JSON.parse(offer);
         for (let category in data) {
