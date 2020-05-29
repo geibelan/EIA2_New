@@ -4,7 +4,7 @@ var A06;
     let form;
     let data;
     //let url: string = "main.html";
-    let url = "http://localhost:5001";
+    let url = "https://eiabalance.herokuapp.com/";
     async function main() {
         let response = await fetch("https://geibelan.github.io/EIA2_New/A05/data.json");
         let offer = await response.text();

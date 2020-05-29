@@ -2,7 +2,7 @@ namespace A06 {
     let form: HTMLFormElement;
     let data: Data;
     //let url: string = "main.html";
-    let url: string = "http://localhost:5001";
+    let url: string = "https://eiabalance.herokuapp.com/";
 
     export interface Item {
         name: string;
