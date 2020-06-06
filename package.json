@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node A06/Server/server.js"
+    "start": "node A07/Server/server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/geibelan/EIA2_New/issues"
   },
-  "homepage": "https://github.com/geibelan/EIA2_New#readme"
+  "homepage": "https://github.com/geibelan/EIA2_New#readme",
+  "dependencies": {
+    "@types/mongodb": "^3.5.20",
+    "mongodb": "^3.5.8"
+  }
 }
