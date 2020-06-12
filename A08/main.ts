@@ -65,8 +65,6 @@ namespace A08 {
 
             drawBloodCell({ "x": X, "y": Y }, { "x": 10, "y": 10 });
         }
-
-
     }
 
     function drawAntiBody(_position: Vector, _size: Vector): void {
