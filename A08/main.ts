@@ -36,8 +36,8 @@ namespace A08 {
 
         }
 
-        let killerPositionMin: Vector = { "x": 50, "y": 400 };
-        let killerPositionMax: Vector = { "x": 300, "y": 750 };
+        let killerPositionMin: Vector = { "x": 50, "y": 300 };
+        let killerPositionMax: Vector = { "x": 300, "y": 600 };
         for (let i: number = 0; i < 3; i++) {
 
             let X: number = Math.random() * (killerPositionMax.x - killerPositionMin.x) + killerPositionMin.x;
@@ -46,8 +46,8 @@ namespace A08 {
             drawKillerCell({ "x": X, "y": Y }, { "x": 30, "y": 30 });
         }
 
-        let antiPositionMin: Vector = { "x": 0, "y": 450 };
-        let antiPositionMax: Vector = { "x": 200, "y": 750 };
+        let antiPositionMin: Vector = { "x": 0, "y": 350 };
+        let antiPositionMax: Vector = { "x": 200, "y": 600 };
         for (let i: number = 0; i < 10; i++) {
 
             let X: number = Math.random() * (antiPositionMax.x - antiPositionMin.x) + antiPositionMin.x;
@@ -57,7 +57,7 @@ namespace A08 {
         }
 
         let cellsPositionMin: Vector = { "x": 0, "y": 0 };
-        let cellsPositionMax: Vector = { "x": 350, "y": 750 };
+        let cellsPositionMax: Vector = { "x": 350, "y": 600 };
         for (let i: number = 0; i < 50; i++) {
 
             let X: number = Math.random() * (cellsPositionMax.x - cellsPositionMin.x) + cellsPositionMin.x;
