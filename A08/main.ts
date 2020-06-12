@@ -27,7 +27,7 @@ namespace A08 {
         }
 
         let coronaPositionMin: Vector = { "x": 150, "y": 0 };
-        let coronaPositionMax: Vector = { "x": 375, "y": 300 };
+        let coronaPositionMax: Vector = { "x": 350, "y": 300 };
         for (let i: number = 0; i < 5; i++) {
 
             let X: number = Math.random() * (coronaPositionMax.x - coronaPositionMin.x) + coronaPositionMin.x;
@@ -47,7 +47,7 @@ namespace A08 {
         }
 
         let antiPositionMin: Vector = { "x": 0, "y": 450 };
-        let antiPositionMax: Vector = { "x": 200, "y": 812 };
+        let antiPositionMax: Vector = { "x": 200, "y": 750 };
         for (let i: number = 0; i < 10; i++) {
 
             let X: number = Math.random() * (antiPositionMax.x - antiPositionMin.x) + antiPositionMin.x;
@@ -57,7 +57,7 @@ namespace A08 {
         }
 
         let cellsPositionMin: Vector = { "x": 0, "y": 0 };
-        let cellsPositionMax: Vector = { "x": 375, "y": 812 };
+        let cellsPositionMax: Vector = { "x": 350, "y": 750 };
         for (let i: number = 0; i < 50; i++) {
 
             let X: number = Math.random() * (cellsPositionMax.x - cellsPositionMin.x) + cellsPositionMin.x;

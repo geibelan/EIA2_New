@@ -16,7 +16,7 @@ var A08;
             drawBodyCell({ "x": X, "y": Y }, { "x": 40, "y": 40 });
         }
         let coronaPositionMin = { "x": 150, "y": 0 };
-        let coronaPositionMax = { "x": 375, "y": 300 };
+        let coronaPositionMax = { "x": 350, "y": 300 };
         for (let i = 0; i < 5; i++) {
             let X = Math.random() * (coronaPositionMax.x - coronaPositionMin.x) + coronaPositionMin.x;
             let Y = Math.random() * (coronaPositionMax.y - coronaPositionMin.y) + coronaPositionMin.y;
@@ -30,14 +30,14 @@ var A08;
             drawKillerCell({ "x": X, "y": Y }, { "x": 30, "y": 30 });
         }
         let antiPositionMin = { "x": 0, "y": 450 };
-        let antiPositionMax = { "x": 200, "y": 812 };
+        let antiPositionMax = { "x": 200, "y": 750 };
         for (let i = 0; i < 10; i++) {
             let X = Math.random() * (antiPositionMax.x - antiPositionMin.x) + antiPositionMin.x;
             let Y = Math.random() * (antiPositionMax.y - antiPositionMin.y) + antiPositionMin.y;
             drawAntiBody({ "x": X, "y": Y }, { "x": 20, "y": 20 });
         }
         let cellsPositionMin = { "x": 0, "y": 0 };
-        let cellsPositionMax = { "x": 375, "y": 812 };
+        let cellsPositionMax = { "x": 350, "y": 750 };
         for (let i = 0; i < 50; i++) {
             let X = Math.random() * (cellsPositionMax.x - cellsPositionMin.x) + cellsPositionMin.x;
             let Y = Math.random() * (cellsPositionMax.y - cellsPositionMin.y) + cellsPositionMin.y;
