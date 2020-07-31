@@ -1,13 +1,13 @@
 "use strict";
 var magicalCanvas;
 (function (magicalCanvas) {
-    let canvas;
-    let crc2;
+    let symbols = [];
     let day = true;
     let scale;
+    let move = false;
     function handleLoad() {
-        canvas = document.querySelector("canvas");
-        crc2 = canvas.getContext("2d");
+        magicalCanvas.canvas = document.querySelector("canvas");
+        magicalCanvas.crc2 = magicalCanvas.canvas.getContext("2d");
         let start = document.getElementById("start");
         let load = document.getElementById("load");
         start.addEventListener("click", chooseBG);
@@ -35,61 +35,84 @@ var magicalCanvas;
         drawBG();
         scale = document.getElementById("scale");
         scale.addEventListener("input", resizeCanvas);
+        document.getElementById("moon")?.addEventListener("mousedown", function () {
+            placeSymbol("moon");
+        });
+        magicalCanvas.canvas.addEventListener("mouseup", function () {
+            move = false;
+        });
+        magicalCanvas.canvas.addEventListener("mousemove", moveSymbol);
+    }
+    let moon;
+    function placeSymbol(_type) {
+        move = true;
+        if (_type == "moon") {
+            moon = new magicalCanvas.Moon();
+        }
+    }
+    function moveSymbol(_event) {
+        if (move == true) {
+            moon.x = _event.offsetX;
+            moon.y = _event.offsetY;
+            drawBG();
+            moon.draw();
+            console.log(moon);
+        }
     }
     function resizeCanvas() {
-        let width = canvas.width;
-        let height = canvas.height;
-        canvas.style.width = width * Number(scale.value) + "px";
-        canvas.style.height = height * Number(scale.value) + "px";
+        let width = magicalCanvas.canvas.width;
+        let height = magicalCanvas.canvas.height;
+        magicalCanvas.canvas.style.width = width * Number(scale.value) + "px";
+        magicalCanvas.canvas.style.height = height * Number(scale.value) + "px";
         //drawBG();
     }
     function drawBG() {
-        crc2.clearRect(0, 0, canvas.width, canvas.height);
+        magicalCanvas.crc2.clearRect(0, 0, magicalCanvas.canvas.width, magicalCanvas.canvas.height);
         if (day == true) {
             //sky
-            crc2.fillStyle = "skyblue";
-            crc2.fillRect(0, 0, canvas.width, canvas.height);
+            magicalCanvas.crc2.fillStyle = "skyblue";
+            magicalCanvas.crc2.fillRect(0, 0, magicalCanvas.canvas.width, magicalCanvas.canvas.height);
             //background
-            crc2.fillStyle = "limegreen";
-            crc2.strokeStyle = "limegreen";
-            crc2.lineWidth = 2;
-            crc2.beginPath();
-            crc2.moveTo(0, canvas.height);
-            crc2.lineTo(0, canvas.height - 50);
-            crc2.quadraticCurveTo(canvas.width / 2, canvas.height - 250, canvas.width, canvas.height - 50);
-            crc2.lineTo(canvas.width, canvas.height);
-            crc2.closePath();
-            crc2.fill();
-            crc2.stroke();
+            magicalCanvas.crc2.fillStyle = "limegreen";
+            magicalCanvas.crc2.strokeStyle = "limegreen";
+            magicalCanvas.crc2.lineWidth = 2;
+            magicalCanvas.crc2.beginPath();
+            magicalCanvas.crc2.moveTo(0, magicalCanvas.canvas.height);
+            magicalCanvas.crc2.lineTo(0, magicalCanvas.canvas.height - 50);
+            magicalCanvas.crc2.quadraticCurveTo(magicalCanvas.canvas.width / 2, magicalCanvas.canvas.height - 250, magicalCanvas.canvas.width, magicalCanvas.canvas.height - 50);
+            magicalCanvas.crc2.lineTo(magicalCanvas.canvas.width, magicalCanvas.canvas.height);
+            magicalCanvas.crc2.closePath();
+            magicalCanvas.crc2.fill();
+            magicalCanvas.crc2.stroke();
             //foreground
-            crc2.fillStyle = "forestgreen";
-            crc2.strokeStyle = "forestgreen";
-            crc2.beginPath();
-            crc2.moveTo(0, canvas.height);
-            crc2.lineTo(0, canvas.height - 150);
-            crc2.bezierCurveTo(20, canvas.height - 150, 20, canvas.height - 20, canvas.width / 2, canvas.height - 20);
-            crc2.bezierCurveTo(canvas.width - 20, canvas.height - 20, canvas.width - 20, canvas.height - 150, canvas.width, canvas.height - 150);
-            crc2.lineTo(canvas.width, canvas.height);
-            crc2.closePath();
-            crc2.fill();
-            crc2.stroke();
+            magicalCanvas.crc2.fillStyle = "forestgreen";
+            magicalCanvas.crc2.strokeStyle = "forestgreen";
+            magicalCanvas.crc2.beginPath();
+            magicalCanvas.crc2.moveTo(0, magicalCanvas.canvas.height);
+            magicalCanvas.crc2.lineTo(0, magicalCanvas.canvas.height - 150);
+            magicalCanvas.crc2.bezierCurveTo(20, magicalCanvas.canvas.height - 150, 20, magicalCanvas.canvas.height - 20, magicalCanvas.canvas.width / 2, magicalCanvas.canvas.height - 20);
+            magicalCanvas.crc2.bezierCurveTo(magicalCanvas.canvas.width - 20, magicalCanvas.canvas.height - 20, magicalCanvas.canvas.width - 20, magicalCanvas.canvas.height - 150, magicalCanvas.canvas.width, magicalCanvas.canvas.height - 150);
+            magicalCanvas.crc2.lineTo(magicalCanvas.canvas.width, magicalCanvas.canvas.height);
+            magicalCanvas.crc2.closePath();
+            magicalCanvas.crc2.fill();
+            magicalCanvas.crc2.stroke();
         }
         else {
             //sky
-            crc2.fillStyle = "#252D3F";
-            crc2.fillRect(0, 0, canvas.width, canvas.height);
+            magicalCanvas.crc2.fillStyle = "#252D3F";
+            magicalCanvas.crc2.fillRect(0, 0, magicalCanvas.canvas.width, magicalCanvas.canvas.height);
             //background
-            crc2.fillStyle = "#142615";
-            crc2.strokeStyle = "#142615";
-            crc2.lineWidth = 2;
-            crc2.beginPath();
-            crc2.moveTo(0, canvas.height);
-            crc2.lineTo(0, canvas.height - 30);
-            crc2.quadraticCurveTo(canvas.width / 2, canvas.height - 270, canvas.width, canvas.height - 30);
-            crc2.lineTo(canvas.width, canvas.height);
-            crc2.closePath();
-            crc2.fill();
-            crc2.stroke();
+            magicalCanvas.crc2.fillStyle = "#142615";
+            magicalCanvas.crc2.strokeStyle = "#142615";
+            magicalCanvas.crc2.lineWidth = 2;
+            magicalCanvas.crc2.beginPath();
+            magicalCanvas.crc2.moveTo(0, magicalCanvas.canvas.height);
+            magicalCanvas.crc2.lineTo(0, magicalCanvas.canvas.height - 30);
+            magicalCanvas.crc2.quadraticCurveTo(magicalCanvas.canvas.width / 2, magicalCanvas.canvas.height - 270, magicalCanvas.canvas.width, magicalCanvas.canvas.height - 30);
+            magicalCanvas.crc2.lineTo(magicalCanvas.canvas.width, magicalCanvas.canvas.height);
+            magicalCanvas.crc2.closePath();
+            magicalCanvas.crc2.fill();
+            magicalCanvas.crc2.stroke();
         }
     }
     window.addEventListener("load", handleLoad);

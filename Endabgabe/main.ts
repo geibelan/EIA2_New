@@ -1,9 +1,12 @@
 namespace magicalCanvas {
-    let canvas: HTMLCanvasElement;
-    let crc2: CanvasRenderingContext2D;
+    export let canvas: HTMLCanvasElement;
+    export let crc2: CanvasRenderingContext2D;
+
+    let symbols: Symbol[] = [];
 
     let day: boolean = true;
     let scale: HTMLInputElement;
+    let move: boolean = false;
 
     function handleLoad(): void {
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
@@ -45,6 +48,39 @@ namespace magicalCanvas {
 
         scale = (<HTMLInputElement>document.getElementById("scale"));
         scale.addEventListener("input", resizeCanvas);
+
+        document.getElementById("moon")?.addEventListener("mousedown", function (): void {
+            placeSymbol("moon");
+        });
+
+        canvas.addEventListener("mouseup", function (): void {
+            move = false;
+        });
+
+
+        canvas.addEventListener("mousemove", moveSymbol);
+    }
+
+    let moon: Moon;
+    
+    function placeSymbol(_type: string): void {
+        move = true;
+        if (_type == "moon") {
+            moon = new Moon();
+            
+        }
+
+    }
+
+    function moveSymbol(_event: MouseEvent): void {
+        if (move == true) {
+
+            moon.x = _event.offsetX;
+            moon.y = _event.offsetY;
+            drawBG();
+            moon.draw();
+            console.log(moon);
+        }
     }
 
     function resizeCanvas(): void {

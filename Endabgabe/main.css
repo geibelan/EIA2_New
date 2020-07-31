@@ -47,6 +47,12 @@ img{
     height: 100px;
     margin: 10px;
     border: 1px solid black;
+
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
 
 #canvas{
