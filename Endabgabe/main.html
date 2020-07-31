@@ -19,9 +19,24 @@
     <div id="show-bg">
         <h2>Choose Background</h2>
         <img id="day" src="assets/day.PNG">
-        <img id="night">
+        <img id="night" src="assets/night.PNG">
     </div>
-    <div id="canvas"><canvas></canvas></div>
+    <div id="canvas">
+        <canvas width="500px" height="300px"></canvas><br>
+        <div id="control-panel">
+            <div><img id="sun" src="assets/sun.PNG"></div>
+            <div><img id="moon" src="assets/moon.PNG"></div>
+            <div><img id="star" src="assets/star.PNG"></div>
+            <div><img id="cloud" src="assets/cloud.PNG"></div>
+            <div><img id="house" src="assets/house.PNG"></div>
+            <div><img id="tree" src="assets/tree.PNG"></div>
+
+            <button id="save">Save</button>
+            <button id="clear">Clear Canvas</button>
+
+        </div><br>
+        <label>Scale Canvas<input id="scale" type="range" min="1" max="1.5" value="1" step="0.1"></label>
+    </div>
     <div id="choose-picture"></div>
 
 </body>
