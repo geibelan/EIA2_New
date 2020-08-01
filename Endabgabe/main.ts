@@ -90,14 +90,13 @@ namespace magicalCanvas {
             move = false;
         });
 
-
         canvas.addEventListener("mousemove", moveSymbol);
 
         document.getElementById("clear")?.addEventListener("click", deletePicture);
     }
 
     function deletePicture(): void {
-        
+
         moons = [];
         clouds = [];
         houses = [];
@@ -108,7 +107,6 @@ namespace magicalCanvas {
         drawBG();
     }
 
-
     let moon: Moon;
     let cloud: Cloud;
     let house: House;
@@ -116,40 +114,36 @@ namespace magicalCanvas {
     let sun: Sun;
     let tree: Tree;
 
-
     function placeSymbol(): void {
 
         if (type == "moon") {
             moon = new Moon();
             moons.push(moon);
-
         }
+
         if (type == "cloud") {
             cloud = new Cloud();
             clouds.push(cloud);
-
         }
+
         if (type == "house") {
             house = new House();
             houses.push(house);
-
         }
 
         if (type == "star") {
             star = new Star();
             stars.push(star);
-
         }
 
         if (type == "sun") {
             sun = new Sun();
             suns.push(sun);
-
         }
+
         if (type == "tree") {
             tree = new Tree();
             trees.push(tree);
-
         }
 
         move = true;
@@ -182,6 +176,7 @@ namespace magicalCanvas {
                 sun.x = _event.offsetX;
                 sun.y = _event.offsetY;
             }
+
             if (type == "tree") {
                 tree.x = _event.offsetX;
                 tree.y = _event.offsetY;
@@ -191,17 +186,14 @@ namespace magicalCanvas {
 
             for (let i: number = 0; stars.length > i; i++) {
                 stars[i].draw();
-
             }
 
             for (let i: number = 0; moons.length > i; i++) {
                 moons[i].draw();
-
             }
 
             for (let i: number = 0; suns.length > i; i++) {
                 suns[i].draw();
-
             }
 
             for (let i: number = 0; houses.length > i; i++) {
@@ -215,21 +207,15 @@ namespace magicalCanvas {
             for (let i: number = 0; trees.length > i; i++) {
                 trees[i].draw();
             }
-
-
-
-            //moon.draw();
         }
     }
 
     function resizeCanvas(): void {
-        let width = canvas.width;
-        let height = canvas.height;
+        let width: number = canvas.width;
+        let height: number = canvas.height;
 
         canvas.style.width = width * Number(scale.value) + "px";
         canvas.style.height = height * Number(scale.value) + "px";
-
-        //drawBG();
     }
 
     function drawBG(): void {

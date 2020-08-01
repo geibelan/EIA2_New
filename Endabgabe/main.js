@@ -158,7 +158,6 @@ var magicalCanvas;
             for (let i = 0; trees.length > i; i++) {
                 trees[i].draw();
             }
-            //moon.draw();
         }
     }
     function resizeCanvas() {
@@ -166,7 +165,6 @@ var magicalCanvas;
         let height = magicalCanvas.canvas.height;
         magicalCanvas.canvas.style.width = width * Number(scale.value) + "px";
         magicalCanvas.canvas.style.height = height * Number(scale.value) + "px";
-        //drawBG();
     }
     function drawBG() {
         magicalCanvas.crc2.clearRect(0, 0, magicalCanvas.canvas.width, magicalCanvas.canvas.height);
