@@ -2,7 +2,12 @@ namespace magicalCanvas {
     export let canvas: HTMLCanvasElement;
     export let crc2: CanvasRenderingContext2D;
 
-    let symbols: Symbol[] = [];
+    let moons: Moon[] = [];
+    let clouds: Cloud[] = [];
+    let houses: House[] = [];
+    let stars: Star[] = [];
+    let suns: Sun[] = [];
+    let trees: Tree[] = [];
 
     let day: boolean = true;
     let scale: HTMLInputElement;
@@ -37,6 +42,8 @@ namespace magicalCanvas {
         });
     }
 
+    let type: string;
+
     function startPicture(): void {
         let startScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("canvas");
         startScreen.style.display = "block";
@@ -50,7 +57,33 @@ namespace magicalCanvas {
         scale.addEventListener("input", resizeCanvas);
 
         document.getElementById("moon")?.addEventListener("mousedown", function (): void {
-            placeSymbol("moon");
+            type = "moon";
+            placeSymbol();
+        });
+
+        document.getElementById("cloud")?.addEventListener("mousedown", function (): void {
+            type = "cloud";
+            placeSymbol();
+        });
+
+        document.getElementById("house")?.addEventListener("mousedown", function (): void {
+            type = "house";
+            placeSymbol();
+        });
+
+        document.getElementById("star")?.addEventListener("mousedown", function (): void {
+            type = "star";
+            placeSymbol();
+        });
+
+        document.getElementById("sun")?.addEventListener("mousedown", function (): void {
+            type = "sun";
+            placeSymbol();
+        });
+
+        document.getElementById("tree")?.addEventListener("mousedown", function (): void {
+            type = "tree";
+            placeSymbol();
         });
 
         canvas.addEventListener("mouseup", function (): void {
@@ -59,27 +92,133 @@ namespace magicalCanvas {
 
 
         canvas.addEventListener("mousemove", moveSymbol);
+
+        document.getElementById("clear")?.addEventListener("click", deletePicture);
     }
 
+    function deletePicture(): void {
+        
+        moons = [];
+        clouds = [];
+        houses = [];
+        stars = [];
+        suns = [];
+        trees = [];
+
+        drawBG();
+    }
+
+
     let moon: Moon;
-    
-    function placeSymbol(_type: string): void {
-        move = true;
-        if (_type == "moon") {
+    let cloud: Cloud;
+    let house: House;
+    let star: Star;
+    let sun: Sun;
+    let tree: Tree;
+
+
+    function placeSymbol(): void {
+
+        if (type == "moon") {
             moon = new Moon();
-            
+            moons.push(moon);
+
+        }
+        if (type == "cloud") {
+            cloud = new Cloud();
+            clouds.push(cloud);
+
+        }
+        if (type == "house") {
+            house = new House();
+            houses.push(house);
+
         }
 
+        if (type == "star") {
+            star = new Star();
+            stars.push(star);
+
+        }
+
+        if (type == "sun") {
+            sun = new Sun();
+            suns.push(sun);
+
+        }
+        if (type == "tree") {
+            tree = new Tree();
+            trees.push(tree);
+
+        }
+
+        move = true;
     }
 
     function moveSymbol(_event: MouseEvent): void {
         if (move == true) {
 
-            moon.x = _event.offsetX;
-            moon.y = _event.offsetY;
+            if (type == "moon") {
+                moon.x = _event.offsetX;
+                moon.y = _event.offsetY;
+            }
+
+            if (type == "cloud") {
+                cloud.x = _event.offsetX;
+                cloud.y = _event.offsetY;
+            }
+
+            if (type == "house") {
+                house.x = _event.offsetX;
+                house.y = _event.offsetY;
+            }
+
+            if (type == "star") {
+                star.x = _event.offsetX;
+                star.y = _event.offsetY;
+            }
+
+            if (type == "sun") {
+                sun.x = _event.offsetX;
+                sun.y = _event.offsetY;
+            }
+            if (type == "tree") {
+                tree.x = _event.offsetX;
+                tree.y = _event.offsetY;
+            }
+
             drawBG();
-            moon.draw();
-            console.log(moon);
+
+            for (let i: number = 0; stars.length > i; i++) {
+                stars[i].draw();
+
+            }
+
+            for (let i: number = 0; moons.length > i; i++) {
+                moons[i].draw();
+
+            }
+
+            for (let i: number = 0; suns.length > i; i++) {
+                suns[i].draw();
+
+            }
+
+            for (let i: number = 0; houses.length > i; i++) {
+                houses[i].draw();
+            }
+
+            for (let i: number = 0; clouds.length > i; i++) {
+                clouds[i].draw();
+            }
+
+            for (let i: number = 0; trees.length > i; i++) {
+                trees[i].draw();
+            }
+
+
+
+            //moon.draw();
         }
     }
 

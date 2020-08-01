@@ -1,7 +1,12 @@
 "use strict";
 var magicalCanvas;
 (function (magicalCanvas) {
-    let symbols = [];
+    let moons = [];
+    let clouds = [];
+    let houses = [];
+    let stars = [];
+    let suns = [];
+    let trees = [];
     let day = true;
     let scale;
     let move = false;
@@ -27,6 +32,7 @@ var magicalCanvas;
             startPicture();
         });
     }
+    let type;
     function startPicture() {
         let startScreen = document.getElementById("canvas");
         startScreen.style.display = "block";
@@ -36,27 +42,123 @@ var magicalCanvas;
         scale = document.getElementById("scale");
         scale.addEventListener("input", resizeCanvas);
         document.getElementById("moon")?.addEventListener("mousedown", function () {
-            placeSymbol("moon");
+            type = "moon";
+            placeSymbol();
+        });
+        document.getElementById("cloud")?.addEventListener("mousedown", function () {
+            type = "cloud";
+            placeSymbol();
+        });
+        document.getElementById("house")?.addEventListener("mousedown", function () {
+            type = "house";
+            placeSymbol();
+        });
+        document.getElementById("star")?.addEventListener("mousedown", function () {
+            type = "star";
+            placeSymbol();
+        });
+        document.getElementById("sun")?.addEventListener("mousedown", function () {
+            type = "sun";
+            placeSymbol();
+        });
+        document.getElementById("tree")?.addEventListener("mousedown", function () {
+            type = "tree";
+            placeSymbol();
         });
         magicalCanvas.canvas.addEventListener("mouseup", function () {
             move = false;
         });
         magicalCanvas.canvas.addEventListener("mousemove", moveSymbol);
+        document.getElementById("clear")?.addEventListener("click", deletePicture);
+    }
+    function deletePicture() {
+        moons = [];
+        clouds = [];
+        houses = [];
+        stars = [];
+        suns = [];
+        trees = [];
+        drawBG();
     }
     let moon;
-    function placeSymbol(_type) {
-        move = true;
-        if (_type == "moon") {
+    let cloud;
+    let house;
+    let star;
+    let sun;
+    let tree;
+    function placeSymbol() {
+        if (type == "moon") {
             moon = new magicalCanvas.Moon();
+            moons.push(moon);
         }
+        if (type == "cloud") {
+            cloud = new magicalCanvas.Cloud();
+            clouds.push(cloud);
+        }
+        if (type == "house") {
+            house = new magicalCanvas.House();
+            houses.push(house);
+        }
+        if (type == "star") {
+            star = new magicalCanvas.Star();
+            stars.push(star);
+        }
+        if (type == "sun") {
+            sun = new magicalCanvas.Sun();
+            suns.push(sun);
+        }
+        if (type == "tree") {
+            tree = new magicalCanvas.Tree();
+            trees.push(tree);
+        }
+        move = true;
     }
     function moveSymbol(_event) {
         if (move == true) {
-            moon.x = _event.offsetX;
-            moon.y = _event.offsetY;
+            if (type == "moon") {
+                moon.x = _event.offsetX;
+                moon.y = _event.offsetY;
+            }
+            if (type == "cloud") {
+                cloud.x = _event.offsetX;
+                cloud.y = _event.offsetY;
+            }
+            if (type == "house") {
+                house.x = _event.offsetX;
+                house.y = _event.offsetY;
+            }
+            if (type == "star") {
+                star.x = _event.offsetX;
+                star.y = _event.offsetY;
+            }
+            if (type == "sun") {
+                sun.x = _event.offsetX;
+                sun.y = _event.offsetY;
+            }
+            if (type == "tree") {
+                tree.x = _event.offsetX;
+                tree.y = _event.offsetY;
+            }
             drawBG();
-            moon.draw();
-            console.log(moon);
+            for (let i = 0; stars.length > i; i++) {
+                stars[i].draw();
+            }
+            for (let i = 0; moons.length > i; i++) {
+                moons[i].draw();
+            }
+            for (let i = 0; suns.length > i; i++) {
+                suns[i].draw();
+            }
+            for (let i = 0; houses.length > i; i++) {
+                houses[i].draw();
+            }
+            for (let i = 0; clouds.length > i; i++) {
+                clouds[i].draw();
+            }
+            for (let i = 0; trees.length > i; i++) {
+                trees[i].draw();
+            }
+            //moon.draw();
         }
     }
     function resizeCanvas() {

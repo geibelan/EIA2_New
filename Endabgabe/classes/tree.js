@@ -1,29 +1,31 @@
 "use strict";
-/*
- crc2.lineWidth = 2;
-            crc2.fillStyle = "brown";
-            crc2.strokeStyle = "brown";
-
-            crc2.beginPath();
-            crc2.moveTo(canvas.width / 2, canvas.height / 2);
-            crc2.lineTo(canvas.width / 2 + 20, canvas.height / 2);
-            crc2.lineTo(canvas.width / 2 + 20, canvas.height / 2 - 10);
-            crc2.lineTo(canvas.width / 2, canvas.height / 2 - 10);
-            crc2.closePath();
-            crc2.fill();
-            crc2.stroke();
-
-            crc2.fillStyle = "limegreen";
-            crc2.strokeStyle = "limegreen";
-            
-
-            crc2.beginPath();
-            crc2.moveTo(canvas.width / 2 + 10, canvas.height / 2 - 10);
-            crc2.lineTo(canvas.width / 2 + 40, canvas.height / 2 - 10);
-            crc2.lineTo(canvas.width / 2 + 10, canvas.height / 2 - 70);
-            crc2.lineTo(canvas.width / 2 - 20, canvas.height / 2 - 10);
-            crc2.closePath();
-            crc2.fill();
-            crc2.stroke();
-*/ 
+var magicalCanvas;
+(function (magicalCanvas) {
+    class Tree extends magicalCanvas.Symbol {
+        draw() {
+            magicalCanvas.crc2.lineWidth = 2;
+            magicalCanvas.crc2.fillStyle = "brown";
+            magicalCanvas.crc2.strokeStyle = "brown";
+            magicalCanvas.crc2.beginPath();
+            magicalCanvas.crc2.moveTo(this.x, this.y);
+            magicalCanvas.crc2.lineTo(this.x + 20, this.y);
+            magicalCanvas.crc2.lineTo(this.x + 20, this.y - 10);
+            magicalCanvas.crc2.lineTo(this.x, this.y - 10);
+            magicalCanvas.crc2.closePath();
+            magicalCanvas.crc2.fill();
+            magicalCanvas.crc2.stroke();
+            magicalCanvas.crc2.fillStyle = "green";
+            magicalCanvas.crc2.strokeStyle = "green";
+            magicalCanvas.crc2.beginPath();
+            magicalCanvas.crc2.moveTo(this.x + 10, this.y - 10);
+            magicalCanvas.crc2.lineTo(this.x + 40, this.y - 10);
+            magicalCanvas.crc2.lineTo(this.x + 10, this.y - 70);
+            magicalCanvas.crc2.lineTo(this.x - 20, this.y - 10);
+            magicalCanvas.crc2.closePath();
+            magicalCanvas.crc2.fill();
+            magicalCanvas.crc2.stroke();
+        }
+    }
+    magicalCanvas.Tree = Tree;
+})(magicalCanvas || (magicalCanvas = {}));
 //# sourceMappingURL=tree.js.map
