@@ -1,18 +1,21 @@
 "use strict";
 var magicalCanvas;
 (function (magicalCanvas) {
+    let editBox;
     let moons = [];
     let clouds = [];
     let houses = [];
     let stars = [];
     let suns = [];
     let trees = [];
+    let symbols = [];
     let day = true;
     let scale;
     let move = false;
     function handleLoad() {
         magicalCanvas.canvas = document.querySelector("canvas");
         magicalCanvas.crc2 = magicalCanvas.canvas.getContext("2d");
+        editBox = document.getElementById("edit");
         let start = document.getElementById("start");
         let load = document.getElementById("load");
         start.addEventListener("click", chooseBG);
@@ -69,15 +72,61 @@ var magicalCanvas;
             move = false;
         });
         magicalCanvas.canvas.addEventListener("mousemove", moveSymbol);
+        magicalCanvas.canvas.addEventListener("click", findSymbol);
         document.getElementById("clear")?.addEventListener("click", deletePicture);
+        document.getElementById("close")?.addEventListener("click", closeEdit);
+        document.getElementById("delete")?.addEventListener("click", deleteSymbol);
+        document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
+        document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
+        document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
+        update();
+    }
+    let selectedSymbol;
+    function scaleSymbol() {
+        selectedSymbol.setScale = Number(document.getElementById("scale-symbol").value);
+    }
+    function rotateSymbol() {
+        selectedSymbol.setRotation = Number(document.getElementById("rotate").value);
+    }
+    function rePositionSymbol() {
+        type = "rePosition";
+        move = true;
+        closeEdit();
+    }
+    function deleteSymbol() {
+        let index = symbols.indexOf(selectedSymbol);
+        symbols.splice(index, 1);
+        closeEdit();
+    }
+    function closeEdit() {
+        selectedSymbol.selected = false;
+        editBox.style.display = "none";
+    }
+    function findSymbol(_event) {
+        if (move == true && type == "rePosition") {
+            move = true;
+        }
+        else {
+            for (let i = 0; symbols.length > i; i++) {
+                if (_event.offsetX > (symbols[i].x - symbols[i].size) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
+                    if (_event.offsetY > (symbols[i].y - symbols[i].size) && _event.offsetY < (symbols[i].y + symbols[i].size)) {
+                        if (selectedSymbol != undefined) {
+                            selectedSymbol.selected = false;
+                        }
+                        selectedSymbol = symbols[i];
+                        selectedSymbol.selected = true;
+                        document.getElementById("rotate").value = "0";
+                        document.getElementById("scale-symbol").value = "1";
+                        editBox.style.display = "block";
+                        editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
+                        editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
+                    }
+                }
+            }
+        }
     }
     function deletePicture() {
-        moons = [];
-        clouds = [];
-        houses = [];
-        stars = [];
-        suns = [];
-        trees = [];
+        symbols = [];
         drawBG();
     }
     let moon;
@@ -89,32 +138,42 @@ var magicalCanvas;
     function placeSymbol() {
         if (type == "moon") {
             moon = new magicalCanvas.Moon();
-            moons.push(moon);
+            moon.name = "moon";
+            symbols.push(moon);
         }
         if (type == "cloud") {
             cloud = new magicalCanvas.Cloud();
-            clouds.push(cloud);
+            cloud.name = "cloud";
+            symbols.push(cloud);
         }
         if (type == "house") {
             house = new magicalCanvas.House();
-            houses.push(house);
+            house.name = "house";
+            symbols.push(house);
         }
         if (type == "star") {
             star = new magicalCanvas.Star();
-            stars.push(star);
+            star.name = "star";
+            symbols.push(star);
         }
         if (type == "sun") {
             sun = new magicalCanvas.Sun();
-            suns.push(sun);
+            sun.name = "sun";
+            symbols.push(sun);
         }
         if (type == "tree") {
             tree = new magicalCanvas.Tree();
-            trees.push(tree);
+            tree.name = "tree";
+            symbols.push(tree);
         }
         move = true;
     }
     function moveSymbol(_event) {
         if (move == true) {
+            if (type == "rePosition") {
+                selectedSymbol.x = _event.offsetX;
+                selectedSymbol.y = _event.offsetY;
+            }
             if (type == "moon") {
                 moon.x = _event.offsetX;
                 moon.y = _event.offsetY;
@@ -140,24 +199,12 @@ var magicalCanvas;
                 tree.y = _event.offsetY;
             }
             drawBG();
-            for (let i = 0; stars.length > i; i++) {
-                stars[i].draw();
-            }
-            for (let i = 0; moons.length > i; i++) {
-                moons[i].draw();
-            }
-            for (let i = 0; suns.length > i; i++) {
-                suns[i].draw();
-            }
-            for (let i = 0; houses.length > i; i++) {
-                houses[i].draw();
-            }
-            for (let i = 0; clouds.length > i; i++) {
-                clouds[i].draw();
-            }
-            for (let i = 0; trees.length > i; i++) {
-                trees[i].draw();
-            }
+            drawSymbol();
+        }
+    }
+    function drawSymbol() {
+        for (let i = 0; symbols.length > i; i++) {
+            symbols[i].draw();
         }
     }
     function resizeCanvas() {
@@ -214,6 +261,48 @@ var magicalCanvas;
             magicalCanvas.crc2.fill();
             magicalCanvas.crc2.stroke();
         }
+    }
+    function update() {
+        drawBG();
+        for (let i = 0; symbols.length > i; i++) {
+            if (symbols[i].name == "star" || symbols[i].name == "sun" || symbols[i].name == "moon") {
+                symbols[i].rescale();
+            }
+            if (symbols[i].name == "tree") {
+                symbols[i].rotate();
+            }
+            if (symbols[i].name == "cloud") {
+                symbols[i].move();
+            }
+            symbols[i].draw();
+        }
+        /*
+                for (let i: number = 0; stars.length > i; i++) {
+                    stars[i].rescale();
+                    stars[i].draw();
+                }
+        
+                for (let i: number = 0; suns.length > i; i++) {
+                    suns[i].rescale();
+                    suns[i].draw();
+                }
+        
+        
+                for (let i: number = 0; moons.length > i; i++) {
+                    moons[i].rescale();
+                    moons[i].draw();
+                }
+        
+                for (let i: number = 0; trees.length > i; i++) {
+                    trees[i].rotate();
+                    trees[i].draw();
+                }
+        
+                for (let i: number = 0; clouds.length > i; i++) {
+                    clouds[i].move();
+                    clouds[i].draw();
+                }*/
+        window.requestAnimationFrame(update);
     }
     window.addEventListener("load", handleLoad);
 })(magicalCanvas || (magicalCanvas = {}));

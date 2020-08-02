@@ -42,6 +42,20 @@ body {
     cursor: pointer;
 }
 
+#edit{
+    display: none;
+    width: 300px;
+    border: 1px solid;
+    border-radius: 30px;
+    position: absolute;
+    background-color: white;
+    text-align: center;
+}
+
+hr{
+    border-color: black;
+}
+
 img{
     width: 200px;
     height: 100px;

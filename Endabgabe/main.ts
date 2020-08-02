@@ -1,6 +1,7 @@
 namespace magicalCanvas {
     export let canvas: HTMLCanvasElement;
     export let crc2: CanvasRenderingContext2D;
+    let editBox: HTMLDivElement;
 
     let moons: Moon[] = [];
     let clouds: Cloud[] = [];
@@ -8,6 +9,7 @@ namespace magicalCanvas {
     let stars: Star[] = [];
     let suns: Sun[] = [];
     let trees: Tree[] = [];
+    let symbols: Symbol[] = [];
 
     let day: boolean = true;
     let scale: HTMLInputElement;
@@ -16,6 +18,7 @@ namespace magicalCanvas {
     function handleLoad(): void {
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
         crc2 = <CanvasRenderingContext2D>canvas.getContext("2d");
+        editBox = <HTMLDivElement>document.getElementById("edit");
 
         let start: HTMLButtonElement = <HTMLButtonElement>document.getElementById("start");
         let load: HTMLButtonElement = <HTMLButtonElement>document.getElementById("load");
@@ -92,18 +95,76 @@ namespace magicalCanvas {
 
         canvas.addEventListener("mousemove", moveSymbol);
 
+        canvas.addEventListener("click", findSymbol);
+
         document.getElementById("clear")?.addEventListener("click", deletePicture);
+        document.getElementById("close")?.addEventListener("click", closeEdit);
+        document.getElementById("delete")?.addEventListener("click", deleteSymbol);
+        document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
+        document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
+        document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
+
+        update();
+    }
+
+    let selectedSymbol: Symbol;
+
+    function scaleSymbol(): void {
+        selectedSymbol.setScale = Number((<HTMLInputElement>document.getElementById("scale-symbol")).value);
+    }
+
+    function rotateSymbol(): void {
+        selectedSymbol.setRotation = Number((<HTMLInputElement>document.getElementById("rotate")).value);
+    }
+
+    function rePositionSymbol(): void {
+        type = "rePosition";
+        move = true;
+        closeEdit();
+
+    }
+
+    function deleteSymbol(): void {
+
+        let index: number = symbols.indexOf(selectedSymbol);
+        symbols.splice(index, 1);
+        closeEdit();
+
+    }
+
+    function closeEdit(): void {
+        selectedSymbol.selected = false;
+        editBox.style.display = "none";
+
+    }
+
+    function findSymbol(_event: MouseEvent): void {
+        if (move == true && type == "rePosition") {
+            move = true;
+        } else {
+            for (let i: number = 0; symbols.length > i; i++) {
+                if (_event.offsetX > (symbols[i].x - symbols[i].size) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
+                    if (_event.offsetY > (symbols[i].y - symbols[i].size) && _event.offsetY < (symbols[i].y + symbols[i].size)) {
+                        if (selectedSymbol != undefined) {
+                            selectedSymbol.selected = false;
+                        }
+                        selectedSymbol = symbols[i];
+                        selectedSymbol.selected = true;
+                        (<HTMLInputElement>document.getElementById("rotate")).value = "0";
+                        (<HTMLInputElement>document.getElementById("scale-symbol")).value = "1";
+                        editBox.style.display = "block";
+                        editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
+                        editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
+
+                    }
+                }
+
+            }
+        }
     }
 
     function deletePicture(): void {
-
-        moons = [];
-        clouds = [];
-        houses = [];
-        stars = [];
-        suns = [];
-        trees = [];
-
+        symbols = [];
         drawBG();
     }
 
@@ -118,32 +179,38 @@ namespace magicalCanvas {
 
         if (type == "moon") {
             moon = new Moon();
-            moons.push(moon);
+            moon.name = "moon";
+            symbols.push(moon);
         }
 
         if (type == "cloud") {
             cloud = new Cloud();
-            clouds.push(cloud);
+            cloud.name = "cloud";
+            symbols.push(cloud);
         }
 
         if (type == "house") {
             house = new House();
-            houses.push(house);
+            house.name = "house";
+            symbols.push(house);
         }
 
         if (type == "star") {
             star = new Star();
-            stars.push(star);
+            star.name = "star";
+            symbols.push(star);
         }
 
         if (type == "sun") {
             sun = new Sun();
-            suns.push(sun);
+            sun.name = "sun";
+            symbols.push(sun);
         }
 
         if (type == "tree") {
             tree = new Tree();
-            trees.push(tree);
+            tree.name = "tree";
+            symbols.push(tree);
         }
 
         move = true;
@@ -151,6 +218,11 @@ namespace magicalCanvas {
 
     function moveSymbol(_event: MouseEvent): void {
         if (move == true) {
+
+            if (type == "rePosition") {
+                selectedSymbol.x = _event.offsetX;
+                selectedSymbol.y = _event.offsetY;
+            }
 
             if (type == "moon") {
                 moon.x = _event.offsetX;
@@ -184,29 +256,14 @@ namespace magicalCanvas {
 
             drawBG();
 
-            for (let i: number = 0; stars.length > i; i++) {
-                stars[i].draw();
-            }
+            drawSymbol();
 
-            for (let i: number = 0; moons.length > i; i++) {
-                moons[i].draw();
-            }
+        }
+    }
 
-            for (let i: number = 0; suns.length > i; i++) {
-                suns[i].draw();
-            }
-
-            for (let i: number = 0; houses.length > i; i++) {
-                houses[i].draw();
-            }
-
-            for (let i: number = 0; clouds.length > i; i++) {
-                clouds[i].draw();
-            }
-
-            for (let i: number = 0; trees.length > i; i++) {
-                trees[i].draw();
-            }
+    function drawSymbol(): void {
+        for (let i: number = 0; symbols.length > i; i++) {
+            symbols[i].draw();
         }
     }
 
@@ -270,6 +327,55 @@ namespace magicalCanvas {
             crc2.fill();
             crc2.stroke();
         }
+    }
+
+    function update(): void {
+
+        drawBG();
+
+        for (let i: number = 0; symbols.length > i; i++) {
+            if (symbols[i].name == "star" || symbols[i].name == "sun" || symbols[i].name == "moon") {
+
+                symbols[i].rescale();
+            }
+            if (symbols[i].name == "tree") {
+
+                symbols[i].rotate();
+            }
+            if (symbols[i].name == "cloud") {
+
+                symbols[i].move();
+            }
+            symbols[i].draw();
+        }
+        /*
+                for (let i: number = 0; stars.length > i; i++) {
+                    stars[i].rescale();
+                    stars[i].draw();
+                }
+        
+                for (let i: number = 0; suns.length > i; i++) {
+                    suns[i].rescale();
+                    suns[i].draw();
+                }
+        
+        
+                for (let i: number = 0; moons.length > i; i++) {
+                    moons[i].rescale();
+                    moons[i].draw();
+                }
+        
+                for (let i: number = 0; trees.length > i; i++) {
+                    trees[i].rotate();
+                    trees[i].draw();
+                }
+        
+                for (let i: number = 0; clouds.length > i; i++) {
+                    clouds[i].move();
+                    clouds[i].draw();
+                }*/
+
+        window.requestAnimationFrame(update);
     }
 
     window.addEventListener("load", handleLoad);

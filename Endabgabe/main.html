@@ -19,6 +19,7 @@
 
 <body>
     <div id="title-page">
+        
         <h1>Magical Canvas</h1>
         <button id="start">Start</button><br>
         <button id="load">Load</button>
@@ -31,11 +32,11 @@
     <div id="canvas">
         <canvas width="500px" height="300px"></canvas><br>
         <div id="control-panel">
-            <div id="sun"><img  src="assets/sun.PNG"></div>
-            <div id="moon"><img  src="assets/moon.PNG"></div>
-            <div id="star"><img  src="assets/star.PNG"></div>
-            <div id="cloud"><img  src="assets/cloud.PNG"></div>
-            <div id="house"><img  src="assets/house.PNG"></div>
+            <div id="sun"><img src="assets/sun.PNG"></div>
+            <div id="moon"><img src="assets/moon.PNG"></div>
+            <div id="star"><img src="assets/star.PNG"></div>
+            <div id="cloud"><img src="assets/cloud.PNG"></div>
+            <div id="house"><img src="assets/house.PNG"></div>
             <div id="tree"><img src="assets/tree.PNG"></div>
 
             <button id="save">Save</button>
@@ -45,7 +46,19 @@
         <label>Scale Canvas<input id="scale" type="range" min="1" max="1.5" value="1" step="0.1"></label>
     </div>
     <div id="choose-picture"></div>
-
+    <div id="edit">
+        <h3>What would you like to do?</h3>
+        <hr>
+        <button id="newPosition">Position</button>
+        <hr>
+        <label>Rotate<input id="rotate" type="range" min="0" max="360" value="0"></label>
+        <hr>
+        <label>Scale<input id="scale-symbol" type="range" min="0.5" max="1.5" value="1" step="0.1"></label>
+        <hr>
+        <button id="delete">Delete</button>
+        <hr>
+        <button id="close">Close</button>
+    </div>
 </body>
 
 </html>
