@@ -143,19 +143,55 @@ namespace magicalCanvas {
             move = true;
         } else {
             for (let i: number = 0; symbols.length > i; i++) {
-                if (_event.offsetX > (symbols[i].x - symbols[i].size) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
-                    if (_event.offsetY > (symbols[i].y - symbols[i].size) && _event.offsetY < (symbols[i].y + symbols[i].size)) {
-                        if (selectedSymbol != undefined) {
-                            selectedSymbol.selected = false;
-                        }
-                        selectedSymbol = symbols[i];
-                        selectedSymbol.selected = true;
-                        (<HTMLInputElement>document.getElementById("rotate")).value = "0";
-                        (<HTMLInputElement>document.getElementById("scale-symbol")).value = "1";
-                        editBox.style.display = "block";
-                        editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
-                        editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
+                if (symbols[i].name == "cloud") {
+                    if (_event.offsetX > (symbols[i].x) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
+                        if (_event.offsetY > (symbols[i].y - symbols[i].size / 2) && _event.offsetY < (symbols[i].y + symbols[i].size / 2)) {
+                            if (selectedSymbol != undefined) {
+                                selectedSymbol.selected = false;
+                            }
+                            selectedSymbol = symbols[i];
+                            selectedSymbol.selected = true;
+                            (<HTMLInputElement>document.getElementById("rotate")).value = "0";
+                            (<HTMLInputElement>document.getElementById("scale-symbol")).value = "1";
+                            editBox.style.display = "block";
+                            editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
+                            editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
 
+                        }
+                    }
+                }
+                else if (symbols[i].name == "tree" || symbols[i].name == "house") {
+                    if (_event.offsetX > (symbols[i].x - symbols[i].size / 2) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
+                        if (_event.offsetY > (symbols[i].y - symbols[i].size * 1.25) && _event.offsetY < (symbols[i].y)) {
+                            if (selectedSymbol != undefined) {
+                                selectedSymbol.selected = false;
+                            }
+                            selectedSymbol = symbols[i];
+                            selectedSymbol.selected = true;
+                            (<HTMLInputElement>document.getElementById("rotate")).value = "0";
+                            (<HTMLInputElement>document.getElementById("scale-symbol")).value = "1";
+                            editBox.style.display = "block";
+                            editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
+                            editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
+
+                        }
+                    }
+                }
+                else {
+                    if (_event.offsetX > (symbols[i].x - symbols[i].size) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
+                        if (_event.offsetY > (symbols[i].y - symbols[i].size) && _event.offsetY < (symbols[i].y + symbols[i].size)) {
+                            if (selectedSymbol != undefined) {
+                                selectedSymbol.selected = false;
+                            }
+                            selectedSymbol = symbols[i];
+                            selectedSymbol.selected = true;
+                            (<HTMLInputElement>document.getElementById("rotate")).value = "0";
+                            (<HTMLInputElement>document.getElementById("scale-symbol")).value = "1";
+                            editBox.style.display = "block";
+                            editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
+                            editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
+
+                        }
                     }
                 }
 
