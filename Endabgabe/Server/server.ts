@@ -7,8 +7,8 @@ export namespace magicalCanvas {
     interface Drawing {
         [type: string]: string | string[];
     }
-   
-    let load: string[] = [];
+
+    let load: any[] = [];
     let mongoClient: Mongo.MongoClient;
     let images: Mongo.Collection;
 
@@ -28,7 +28,7 @@ export namespace magicalCanvas {
         server.listen(_port);
         server.addListener("request", handleRequest);
     }
-   
+
 
     async function connectToDatabase(_url: string): Promise<void> {
         let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
@@ -76,7 +76,7 @@ export namespace magicalCanvas {
 
     function showOrders(_item: object): void {
         for (let key in _item) {
-            load.push(key);
+            load.push([key, _item]);
 
         }
     }
