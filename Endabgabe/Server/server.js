@@ -6,6 +6,8 @@ const Mongo = require("mongodb");
 //mongodb+srv://TestUser:<password>@eia2-i2krx.mongodb.net/<dbname>?retryWrites=true&w=majority
 var magicalCanvas;
 (function (magicalCanvas) {
+    let load = [];
+    let mongoClient;
     let images;
     let port = process.env.PORT;
     if (port == undefined)
@@ -19,8 +21,6 @@ var magicalCanvas;
         server.listen(_port);
         server.addListener("request", handleRequest);
     }
-    let mongoClient;
-    let load = [];
     async function connectToDatabase(_url) {
         let options = { useNewUrlParser: true, useUnifiedTopology: true };
         mongoClient = new Mongo.MongoClient(_url, options);
@@ -37,8 +37,8 @@ var magicalCanvas;
         if (_request.url) {
             if (_request.url == "/?load=all") {
                 console.log("Load");
-                let pictures = mongoClient.db("Canvas").collection("Save");
-                let cursor = await pictures.find();
+                //let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
+                let cursor = await images.find();
                 await cursor.forEach(showOrders);
                 let jsonString = JSON.stringify(load);
                 _response.write(jsonString);
