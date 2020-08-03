@@ -1,21 +1,24 @@
 namespace magicalCanvas {
 
-    //exporting canvas and its drawing style into the main
+    //exporting canvas and its drawing style from the main.ts
     export let canvas: HTMLCanvasElement;
     export let crc2: CanvasRenderingContext2D;
-
+    //load data that has been saved saved and reloaded from the database
+    let loadData: any;
+    //box that gives functions to edit placed symbols on canvas
     let editBox: HTMLDivElement;
 
-    //setting up arrays for every symbol that is empty for now; every symbol has its own type
+    //setting up an array for the symbols that is empty for now; every symbol has its own Class
     let symbols: Symbol[] = [];
 
-    //this is related to the bg, but not quite sure what it does with move here
+    //this is related to the bg
     let day: boolean = true;
+    //input element with which one can change the size of the canvas
     let scale: HTMLInputElement;
-
+    //symbol cannot be moved (drag and drop)
     let move: boolean = false;
 
-    //initiating the very first page to choose either start or load, loading canvas, drawing style and the bar with symbols
+    //initiating the very first page to choose either start or load, getting canvas, drawing style 
     //also installing buttons, getting all elements by ID
     function handleLoad(): void {
         canvas = <HTMLCanvasElement>document.querySelector("canvas");
@@ -31,7 +34,7 @@ namespace magicalCanvas {
     }
 
     //getting elements by ID, putting the title page on not-visible, showing bg page
-    //first defining the choice of day bg, then night by putting day on false
+    //decision between choosing the day or night bg; if one chooses night then day will be false
     function chooseBG(): void {
         let startScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("title-page");
         startScreen.style.display = "none";
@@ -51,10 +54,10 @@ namespace magicalCanvas {
         });
     }
 
-    //not sure
+    //name of symbol from mousedown on symbol bar
     let type: string;
 
-    //after choosing bg and drawing it, load canvas, hide choose bg page
+    //After showing the canvas and the bar with symbols, the bg is drawn. Hide choose bg page
     function startPicture(): void {
         let startScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("canvas");
         startScreen.style.display = "block";
@@ -67,12 +70,11 @@ namespace magicalCanvas {
 
         drawBG();
 
-        //resizing the entire canvas
+        //resizing the entire canvas, own function
         scale = (<HTMLInputElement>document.getElementById("scale"));
         scale.addEventListener("input", resizeCanvas);
 
         //installing click listener to the symbols at mousedown and keeping the left mouse button pressed down
-        //placeSymbol not super sure
         document.getElementById("moon")?.addEventListener("mousedown", function (): void {
             type = "moon";
             placeSymbol();
@@ -112,25 +114,28 @@ namespace magicalCanvas {
             move = false;
         });
 
-        //finding symbol? checking if the event listener is being run when you click on a symbol, I guess
+        //check if symbol is being clicked on, own function
         canvas.addEventListener("click", findSymbol);
 
-        //installing event listener for the editing box that pops up when clicking on a set symbol
+
         document.getElementById("clear")?.addEventListener("click", deletePicture);
+        //installing event listener for the editing box that pops up when clicking on a set symbol
         document.getElementById("close")?.addEventListener("click", closeEdit);
         document.getElementById("delete")?.addEventListener("click", deleteSymbol);
         document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
         document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
         document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
+        //saves the symbols array and bg picture, own function
         document.getElementById("save")?.addEventListener("click", savePicture);
 
         update();
     }
 
+    //clicked on symbol that is marked red
     let selectedSymbol: Symbol;
 
     //creating functions for the editing box 
-    function scaleSymbol(): void {
+    function scaleSymbol(): void {//string is converted to a number
         selectedSymbol.setScale = Number((<HTMLInputElement>document.getElementById("scale-symbol")).value);
     }
 
@@ -142,15 +147,12 @@ namespace magicalCanvas {
         type = "rePosition";
         move = true;
         closeEdit();
-
     }
 
     function deleteSymbol(): void {
-
-        let index: number = symbols.indexOf(selectedSymbol);
-        symbols.splice(index, 1);
+        let index: number = symbols.indexOf(selectedSymbol); //index is needed to remove symbol from array https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+        symbols.splice(index, 1); //method to remove symbol from symbols array https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
         closeEdit();
-
     }
 
     function closeEdit(): void {
@@ -159,25 +161,26 @@ namespace magicalCanvas {
 
     }
 
-    //complicated function, got to do with repositioning the symbol when you've already put it down 
-    //cloud got an extra function
+    //checks if you click on a symbol
+    //if symbol is clicked, open edit box and highlight symbol
+    //symbols have different methods to check if clicked
     function findSymbol(_event: MouseEvent): void {
-        if (move == true && type == "rePosition") {
-            move = true;
+        if (move == true) {
+            move = false; //drop symbol on new position after edit
         } else {
-            for (let i: number = 0; symbols.length > i; i++) {
+            for (let i: number = 0; symbols.length > i; i++) {//goes through every symbol to check if clicked on
+
                 if (symbols[i].name == "cloud") {
-                    if (_event.offsetX > (symbols[i].x) && _event.offsetX < (symbols[i].x + symbols[i].size)) {
-                        if (_event.offsetY > (symbols[i].y - symbols[i].size / 2) && _event.offsetY < (symbols[i].y + symbols[i].size / 2)) {
+
+                    if (_event.offsetX > (symbols[i].x) && _event.offsetX < (symbols[i].x + symbols[i].size)) {//check if click was inbetween left and right end of symbol 
+                        if (_event.offsetY > (symbols[i].y - symbols[i].size / 2) && _event.offsetY < (symbols[i].y + symbols[i].size / 2)) {//check if click was inbetween upper and lower end of symbol 
                             if (selectedSymbol != undefined) {
-                                selectedSymbol.selected = false;
+                                selectedSymbol.selected = false; //previously selected symbol is deselected
                             }
-                            selectedSymbol = symbols[i];
-                            selectedSymbol.selected = true;
-                            (<HTMLInputElement>document.getElementById("rotate")).value = "0";
-                            (<HTMLInputElement>document.getElementById("scale-symbol")).value = "1";
-                            editBox.style.display = "block";
-                            editBox.style.left = (symbols[i].x + symbols[i].size) + "px";
+                            selectedSymbol = symbols[i]; //set selected symbol to clicked on symbol
+                            selectedSymbol.selected = true; //new symbol is highlighted
+                            editBox.style.display = "block"; //show edit box
+                            editBox.style.left = (symbols[i].x + symbols[i].size) + "px"; //position of edit box relative to symbol
                             editBox.style.top = (symbols[i].y + symbols[i].size) + "px";
 
                         }
@@ -222,7 +225,8 @@ namespace magicalCanvas {
         }
     }
 
-    //deleting all symbols in their specific array, then drawing the bg new
+    //deleting all symbols in their specific array so symbols won't be drawn in the update function
+    //then drawing the bg anew
     function deletePicture(): void {
         symbols = [];
         drawBG();
@@ -236,7 +240,7 @@ namespace magicalCanvas {
     let sun: Sun;
     let tree: Tree;
 
-    //playing symbols in their specific array
+    //place symbols in the symbols array 
     function placeSymbol(): void {
 
         if (type == "moon") {
@@ -280,10 +284,10 @@ namespace magicalCanvas {
 
     //if clicked on symbol, the symbol is being attached to the mouses position and moves with it
     function moveSymbol(_event: MouseEvent): void {
-        if (move == true) {
+        if (move == true) {//false if left mouse button released on Canvas
 
             if (type == "rePosition") {
-                selectedSymbol.x = _event.offsetX;
+                selectedSymbol.x = _event.offsetX;//_event.offsetX is current position of mouse on canvas
                 selectedSymbol.y = _event.offsetY;
             }
 
@@ -317,17 +321,7 @@ namespace magicalCanvas {
                 tree.y = _event.offsetY;
             }
 
-            drawBG();
 
-            drawSymbol();
-
-        }
-    }
-
-    //easy loop, if i is larger than 0, add one symbol into the array
-    function drawSymbol(): void {
-        for (let i: number = 0; symbols.length > i; i++) {
-            symbols[i].draw();
         }
     }
 
@@ -339,6 +333,7 @@ namespace magicalCanvas {
         canvas.height = height * Number(scale.value);
     }
 
+    //canvas cleared, draw chosen bg
     function drawBG(): void {
         crc2.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -393,6 +388,9 @@ namespace magicalCanvas {
         }
     }
 
+    //bg is drawn
+    //adds specific animation to the symbol accordingly as long as there's more than 0 symbols in the array
+    //symbols are drawn on canvas
     function update(): void {
 
         drawBG();
@@ -413,17 +411,19 @@ namespace magicalCanvas {
             symbols[i].draw();
         }
 
-        window.requestAnimationFrame(update);
+        window.requestAnimationFrame(update);//function that calls upon update after every frame 
     }
 
-
+    //See https://github.com/JirkaDellOro/EIA2-Inverted/blob/master/X00_Code/L07_Database/CocktailBar/Client/CocktailBar.ts
+    //And the coresponding lecture
     let url: string = "https://eiabalance.herokuapp.com/";
 
     async function savePicture(_event: Event): Promise<void> {
         console.log("Send");
         let formData: FormData = new FormData();
-        formData.append("draw", JSON.stringify(symbols));
-        if (day == true) {
+
+        formData.append("draw", JSON.stringify(symbols)); //save symbols array
+        if (day == true) {//save chosen bg
             formData.append("bg", "Day");
         } else {
             formData.append("bg", "Night");
@@ -435,11 +435,10 @@ namespace magicalCanvas {
 
     }
 
-    async function loadFromDB(_event: Event): Promise<void> {
+    async function loadFromDB(_event: Event): Promise<void> {//Loading from Database is similar to Kohler, Alida's Code
 
         let formData: FormData = new FormData();
         formData.append("load", "all");
-
         let query: URLSearchParams = new URLSearchParams(<any>formData);
         let response: Response = await fetch(url + "?" + query.toString());
         let responseText: string = await response.text();
@@ -447,11 +446,10 @@ namespace magicalCanvas {
 
     }
 
-    let loadData: any;
-
+    //hide title page show saved pictures
     function loadPicture(_load: string): void {
 
-        loadData = JSON.parse(_load);
+        loadData = JSON.parse(_load); //data of loaded pictures
 
         let startScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("title-page");
         startScreen.style.display = "none";
@@ -459,12 +457,12 @@ namespace magicalCanvas {
         let loadScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("show-load");
         loadScreen.style.display = "block";
 
-        for (let i: number = 0; i < loadData.length; i++) {
-            let image: HTMLDivElement = document.createElement("div");
+        for (let i: number = 0; i < loadData.length; i++) {//loop trough every loaded picture
+            let image: HTMLDivElement = document.createElement("div"); //create div for image
             image.innerHTML = "Load Image " + (i + 1) + " | " + loadData[i]["bg"];
             image.setAttribute("id", i + "");
             loadScreen.appendChild(image);
-            image.addEventListener("click", continuePicture)
+            image.addEventListener("click", continuePicture);
 
         }
 

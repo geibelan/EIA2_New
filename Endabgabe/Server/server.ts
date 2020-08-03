@@ -1,3 +1,5 @@
+//See https://github.com/JirkaDellOro/EIA2-Inverted/blob/master/X00_Code/L07_Database/CocktailBar/Server/Server.ts
+//And the coresponding lecture
 import * as Http from "http";
 import * as Url from "url";
 import * as Mongo from "mongodb";
@@ -49,8 +51,7 @@ export namespace magicalCanvas {
         if (_request.url) {
 
             if (_request.url == "/?load=all") {
-                console.log("Load");
-                //let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
+                console.log("Load"); //Loading from Database is similar to Kohler, Alida's Code
                 let cursor: Mongo.Cursor<any> = await images.find();
                 await cursor.forEach(getImages);
                 let jsonString: string = JSON.stringify(load);
@@ -58,7 +59,6 @@ export namespace magicalCanvas {
                 load = [];
 
             } else {
-
                 let url: Url.UrlWithParsedQuery = Url.parse(_request.url, true);
                 for (let key in url.query) {
                     _response.write(key + ":" + url.query[key] + "<br/>");
@@ -75,7 +75,7 @@ export namespace magicalCanvas {
     }
 
     function getImages(_item: object): void {
-            load.push( _item);
+        load.push(_item);
     }
 
     function saveImages(_img: Drawing): void {

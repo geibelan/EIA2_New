@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+//See https://github.com/JirkaDellOro/EIA2-Inverted/blob/master/X00_Code/L07_Database/CocktailBar/Server/Server.ts
+//And the coresponding lecture
 const Http = require("http");
 const Url = require("url");
 const Mongo = require("mongodb");
@@ -36,8 +38,7 @@ var magicalCanvas;
         _response.setHeader("Access-Control-Allow-Origin", "*");
         if (_request.url) {
             if (_request.url == "/?load=all") {
-                console.log("Load");
-                //let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
+                console.log("Load"); //Loading from Database is similar to Kohler, Alida's Code
                 let cursor = await images.find();
                 await cursor.forEach(getImages);
                 let jsonString = JSON.stringify(load);
