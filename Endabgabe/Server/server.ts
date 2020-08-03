@@ -27,6 +27,8 @@ export namespace magicalCanvas {
         server.addListener("request", handleRequest);
     }
     let mongoClient: Mongo.MongoClient;
+    let load: string[] = [];
+
     async function connectToDatabase(_url: string): Promise<void> {
         let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
         mongoClient = new Mongo.MongoClient(_url, options);
@@ -49,9 +51,10 @@ export namespace magicalCanvas {
                 console.log("Load");
                 let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
                 let cursor: Mongo.Cursor<any> = await pictures.find();
-                let response: any = await cursor.toArray();
-                let jsonString: string = JSON.stringify(response);
+                await cursor.forEach(showOrders);
+                let jsonString: string = JSON.stringify(load);
                 _response.write(jsonString);
+                load = [];
 
             } else {
 
@@ -68,6 +71,13 @@ export namespace magicalCanvas {
         }
 
         _response.end();
+    }
+
+    function showOrders(_item: object): void {
+        for (let key in _item) {
+            load.push(key);
+
+        }
     }
 
 

@@ -20,6 +20,7 @@ var magicalCanvas;
         server.addListener("request", handleRequest);
     }
     let mongoClient;
+    let load = [];
     async function connectToDatabase(_url) {
         let options = { useNewUrlParser: true, useUnifiedTopology: true };
         mongoClient = new Mongo.MongoClient(_url, options);
@@ -38,9 +39,10 @@ var magicalCanvas;
                 console.log("Load");
                 let pictures = mongoClient.db("Canvas").collection("Save");
                 let cursor = await pictures.find();
-                let response = await cursor.toArray();
-                let jsonString = JSON.stringify(response);
+                await cursor.forEach(showOrders);
+                let jsonString = JSON.stringify(load);
                 _response.write(jsonString);
+                load = [];
             }
             else {
                 let url = Url.parse(_request.url, true);
@@ -53,6 +55,11 @@ var magicalCanvas;
             }
         }
         _response.end();
+    }
+    function showOrders(_item) {
+        for (let key in _item) {
+            load.push(key);
+        }
     }
     function storeOrder(_img) {
         images.insert(_img);
