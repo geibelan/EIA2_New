@@ -46,13 +46,13 @@ export namespace magicalCanvas {
         if (_request.url) {
 
             if (_request.url == "/?load=all") {
-                // Load Names of all Pictures and show them to user 
+                console.log("Load");
                 let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
                 let cursor: Mongo.Cursor<any> = await pictures.find();
                 let response: any = await cursor.toArray();
                 let jsonString: string = JSON.stringify(response);
                 _response.write(jsonString);
-                
+
             } else {
 
                 let url: Url.UrlWithParsedQuery = Url.parse(_request.url, true);

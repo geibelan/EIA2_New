@@ -35,7 +35,7 @@ var magicalCanvas;
         _response.setHeader("Access-Control-Allow-Origin", "*");
         if (_request.url) {
             if (_request.url == "/?load=all") {
-                // Load Names of all Pictures and show them to user 
+                console.log("Load");
                 let pictures = mongoClient.db("Canvas").collection("Save");
                 let cursor = await pictures.find();
                 let response = await cursor.toArray();
