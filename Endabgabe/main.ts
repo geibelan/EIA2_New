@@ -440,6 +440,7 @@ namespace magicalCanvas {
         let response: Response = await fetch(url + "?" + query.toString());
         let responseText: string = await response.text();
         alert(responseText);
+        console.log(JSON.parse(responseText));
 
     }
 

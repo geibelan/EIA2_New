@@ -356,6 +356,7 @@ var magicalCanvas;
         let response = await fetch(url + "?" + query.toString());
         let responseText = await response.text();
         alert(responseText);
+        console.log(JSON.parse(responseText));
     }
     window.addEventListener("load", handleLoad);
 })(magicalCanvas || (magicalCanvas = {}));

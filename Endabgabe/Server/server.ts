@@ -75,10 +75,9 @@ export namespace magicalCanvas {
     }
 
     function showOrders(_item: object): void {
-        for (let key in _item) {
-            load.push([key, _item]);
+       
+            load.push( _item);
 
-        }
     }
 
 

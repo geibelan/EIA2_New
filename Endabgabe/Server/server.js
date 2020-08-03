@@ -57,9 +57,7 @@ var magicalCanvas;
         _response.end();
     }
     function showOrders(_item) {
-        for (let key in _item) {
-            load.push([key, _item]);
-        }
+        load.push(_item);
     }
     function storeOrder(_img) {
         images.insert(_img);
