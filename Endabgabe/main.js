@@ -2,16 +2,14 @@
 var magicalCanvas;
 (function (magicalCanvas) {
     let editBox;
-    let moons = [];
-    let clouds = [];
-    let houses = [];
-    let stars = [];
-    let suns = [];
-    let trees = [];
+    //setting up arrays for every symbol that is empty for now; every symbol has its own type
     let symbols = [];
+    //this is related to the bg, but not quite sure what it does with move here
     let day = true;
     let scale;
     let move = false;
+    //initiating the very first page to choose either start or load, loading canvas, drawing style and the bar with symbols
+    //also installing buttons, getting all elements by ID
     function handleLoad() {
         magicalCanvas.canvas = document.querySelector("canvas");
         magicalCanvas.crc2 = magicalCanvas.canvas.getContext("2d");
@@ -20,6 +18,8 @@ var magicalCanvas;
         let load = document.getElementById("load");
         start.addEventListener("click", chooseBG);
     }
+    //getting elements by ID, putting the title page on not-visible, showing bg page
+    //first defining the choice of day bg, then night by putting day on false
     function chooseBG() {
         let startScreen = document.getElementById("title-page");
         startScreen.style.display = "none";
@@ -35,15 +35,20 @@ var magicalCanvas;
             startPicture();
         });
     }
+    //not sure
     let type;
+    //after choosing bg and drawing it, load canvas, hide choose bg page
     function startPicture() {
         let startScreen = document.getElementById("canvas");
         startScreen.style.display = "block";
         let bgScreen = document.getElementById("show-bg");
         bgScreen.style.display = "none";
         drawBG();
+        //resizing the entire canvas
         scale = document.getElementById("scale");
         scale.addEventListener("input", resizeCanvas);
+        //installing click listener to the symbols at mousedown and keeping the left mouse button pressed down
+        //placeSymbol not super sure
         document.getElementById("moon")?.addEventListener("mousedown", function () {
             type = "moon";
             placeSymbol();
@@ -68,20 +73,26 @@ var magicalCanvas;
             type = "tree";
             placeSymbol();
         });
+        //left mouse button released, symbol won't move anymore
         magicalCanvas.canvas.addEventListener("mouseup", function () {
             move = false;
         });
+        //mouse is moving, moving symbol with it, own function
         magicalCanvas.canvas.addEventListener("mousemove", moveSymbol);
+        //finding symbol? checking if the event listener is being run when you click on a symbol, I guess
         magicalCanvas.canvas.addEventListener("click", findSymbol);
+        //installing event listener for the editing box that pops up when clicking on a set symbol
         document.getElementById("clear")?.addEventListener("click", deletePicture);
         document.getElementById("close")?.addEventListener("click", closeEdit);
         document.getElementById("delete")?.addEventListener("click", deleteSymbol);
         document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
         document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
         document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
+        document.getElementById("savel")?.addEventListener("click", sendImage);
         update();
     }
     let selectedSymbol;
+    //creating functions for the editing box 
     function scaleSymbol() {
         selectedSymbol.setScale = Number(document.getElementById("scale-symbol").value);
     }
@@ -102,6 +113,8 @@ var magicalCanvas;
         selectedSymbol.selected = false;
         editBox.style.display = "none";
     }
+    //complicated function, got to do with repositioning the symbol when you've already put it down 
+    //cloud got an extra function
     function findSymbol(_event) {
         if (move == true && type == "rePosition") {
             move = true;
@@ -159,16 +172,19 @@ var magicalCanvas;
             }
         }
     }
+    //deleting all symbols in their specific array, then drawing the bg new
     function deletePicture() {
         symbols = [];
         drawBG();
     }
+    //creating variables with their respective type
     let moon;
     let cloud;
     let house;
     let star;
     let sun;
     let tree;
+    //playing symbols in their specific array
     function placeSymbol() {
         if (type == "moon") {
             moon = new magicalCanvas.Moon();
@@ -202,6 +218,7 @@ var magicalCanvas;
         }
         move = true;
     }
+    //if clicked on symbol, the symbol is being attached to the mouses position and moves with it
     function moveSymbol(_event) {
         if (move == true) {
             if (type == "rePosition") {
@@ -236,16 +253,17 @@ var magicalCanvas;
             drawSymbol();
         }
     }
+    //easy loop, if i is larger than 0, add one symbol into the array
     function drawSymbol() {
         for (let i = 0; symbols.length > i; i++) {
             symbols[i].draw();
         }
     }
     function resizeCanvas() {
-        let width = magicalCanvas.canvas.width;
-        let height = magicalCanvas.canvas.height;
-        magicalCanvas.canvas.style.width = width * Number(scale.value) + "px";
-        magicalCanvas.canvas.style.height = height * Number(scale.value) + "px";
+        let width = 500;
+        let height = 300;
+        magicalCanvas.canvas.width = width * Number(scale.value);
+        magicalCanvas.canvas.height = height * Number(scale.value);
     }
     function drawBG() {
         magicalCanvas.crc2.clearRect(0, 0, magicalCanvas.canvas.width, magicalCanvas.canvas.height);
@@ -310,33 +328,18 @@ var magicalCanvas;
             }
             symbols[i].draw();
         }
-        /*
-                for (let i: number = 0; stars.length > i; i++) {
-                    stars[i].rescale();
-                    stars[i].draw();
-                }
-        
-                for (let i: number = 0; suns.length > i; i++) {
-                    suns[i].rescale();
-                    suns[i].draw();
-                }
-        
-        
-                for (let i: number = 0; moons.length > i; i++) {
-                    moons[i].rescale();
-                    moons[i].draw();
-                }
-        
-                for (let i: number = 0; trees.length > i; i++) {
-                    trees[i].rotate();
-                    trees[i].draw();
-                }
-        
-                for (let i: number = 0; clouds.length > i; i++) {
-                    clouds[i].move();
-                    clouds[i].draw();
-                }*/
         window.requestAnimationFrame(update);
+    }
+    ////////////////////////////
+    let url = "https://eiabalance.herokuapp.com/";
+    async function sendImage(_event) {
+        console.log("Send order");
+        let formData = new FormData();
+        formData.append("type", "sun");
+        let query = new URLSearchParams(formData);
+        let response = await fetch(url + "?" + query.toString());
+        let responseText = await response.text();
+        alert(responseText);
     }
     window.addEventListener("load", handleLoad);
 })(magicalCanvas || (magicalCanvas = {}));

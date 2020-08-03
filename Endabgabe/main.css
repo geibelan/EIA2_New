@@ -6,7 +6,6 @@ button {
     height: 50px;
     font-size: large;
     margin-bottom: 10px;
-    
 }
 
 button:hover{
@@ -81,9 +80,8 @@ img{
 
 #control-panel{
     display: flex;
-    
+    width: 800px;
     border: 1px solid;
-
 }
 
 #control-panel button{
