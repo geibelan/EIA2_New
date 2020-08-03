@@ -17,6 +17,7 @@ var magicalCanvas;
         let start = document.getElementById("start");
         let load = document.getElementById("load");
         start.addEventListener("click", chooseBG);
+        load.addEventListener("click", loadFromDB);
     }
     //getting elements by ID, putting the title page on not-visible, showing bg page
     //first defining the choice of day bg, then night by putting day on false
@@ -333,7 +334,7 @@ var magicalCanvas;
     ////////////////////////////
     let url = "https://eiabalance.herokuapp.com/";
     async function sendImage(_event) {
-        console.log("Send order");
+        console.log("Send");
         let formData = new FormData();
         formData.append("draw", JSON.stringify(symbols));
         if (day == true) {
@@ -342,6 +343,15 @@ var magicalCanvas;
         else {
             formData.append("bg", "Night");
         }
+        let query = new URLSearchParams(formData);
+        let response = await fetch(url + "?" + query.toString());
+        let responseText = await response.text();
+        alert(responseText);
+    }
+    async function loadFromDB(_event) {
+        console.log("Load");
+        let formData = new FormData();
+        formData.append("load", "all");
         let query = new URLSearchParams(formData);
         let response = await fetch(url + "?" + query.toString());
         let responseText = await response.text();

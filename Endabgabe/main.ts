@@ -27,6 +27,7 @@ namespace magicalCanvas {
         let load: HTMLButtonElement = <HTMLButtonElement>document.getElementById("load");
 
         start.addEventListener("click", chooseBG);
+        load.addEventListener("click", loadFromDB);
     }
 
     //getting elements by ID, putting the title page on not-visible, showing bg page
@@ -415,7 +416,7 @@ namespace magicalCanvas {
     let url: string = "https://eiabalance.herokuapp.com/";
 
     async function sendImage(_event: Event): Promise<void> {
-        console.log("Send order");
+        console.log("Send");
         let formData: FormData = new FormData();
         formData.append("draw", JSON.stringify(symbols));
         if (day == true) {
@@ -427,6 +428,19 @@ namespace magicalCanvas {
         let response: Response = await fetch(url + "?" + query.toString());
         let responseText: string = await response.text();
         alert(responseText);
+
+    }
+
+    async function loadFromDB(_event: Event): Promise<void> {
+        console.log("Load");
+        let formData: FormData = new FormData();
+        formData.append("load", "all");
+
+        let query: URLSearchParams = new URLSearchParams(<any>formData);
+        let response: Response = await fetch(url + "?" + query.toString());
+        let responseText: string = await response.text();
+        alert(responseText);
+
     }
 
     window.addEventListener("load", handleLoad);

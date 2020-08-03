@@ -26,31 +26,45 @@ export namespace magicalCanvas {
         server.listen(_port);
         server.addListener("request", handleRequest);
     }
-
+    let mongoClient: Mongo.MongoClient;
     async function connectToDatabase(_url: string): Promise<void> {
         let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
-        let mongoClient: Mongo.MongoClient = new Mongo.MongoClient(_url, options);
+        mongoClient = new Mongo.MongoClient(_url, options);
         await mongoClient.connect();
         images = mongoClient.db("Canvas").collection("Save");
         console.log("Database connection ", images != undefined);
+        console.log("Database connection ", images != undefined);
     }
 
-    function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
+
+    async function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): Promise<any> {
         console.log("What's up?");
         console.log(port);
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
 
         if (_request.url) {
-            let url: Url.UrlWithParsedQuery = Url.parse(_request.url, true);
-            for (let key in url.query) {
-                _response.write(key + ":" + url.query[key] + "<br/>");
+
+            if (_request.url == "/?load=all") {
+                // Load Names of all Pictures and show them to user 
+                let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
+                let cursor: Mongo.Cursor<any> = await pictures.find();
+                let response: any = await cursor.toArray();
+                let jsonString: string = JSON.stringify(response);
+                _response.write(jsonString);
+                
+            } else {
+
+                let url: Url.UrlWithParsedQuery = Url.parse(_request.url, true);
+                for (let key in url.query) {
+                    _response.write(key + ":" + url.query[key] + "<br/>");
+                }
+
+                let jsonString: string = JSON.stringify(url.query);
+                _response.write(jsonString);
+
+                storeOrder(<Drawing>url.query);
             }
-
-            let jsonString: string = JSON.stringify(url.query);
-            _response.write(jsonString);
-
-            storeOrder(<Drawing>url.query);
         }
 
         _response.end();

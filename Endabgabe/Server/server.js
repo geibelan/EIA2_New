@@ -19,26 +19,38 @@ var magicalCanvas;
         server.listen(_port);
         server.addListener("request", handleRequest);
     }
+    let mongoClient;
     async function connectToDatabase(_url) {
         let options = { useNewUrlParser: true, useUnifiedTopology: true };
-        let mongoClient = new Mongo.MongoClient(_url, options);
+        mongoClient = new Mongo.MongoClient(_url, options);
         await mongoClient.connect();
         images = mongoClient.db("Canvas").collection("Save");
         console.log("Database connection ", images != undefined);
+        console.log("Database connection ", images != undefined);
     }
-    function handleRequest(_request, _response) {
+    async function handleRequest(_request, _response) {
         console.log("What's up?");
         console.log(port);
         _response.setHeader("content-type", "text/html; charset=utf-8");
         _response.setHeader("Access-Control-Allow-Origin", "*");
         if (_request.url) {
-            let url = Url.parse(_request.url, true);
-            for (let key in url.query) {
-                _response.write(key + ":" + url.query[key] + "<br/>");
+            if (_request.url == "/?load=all") {
+                // Load Names of all Pictures and show them to user 
+                let pictures = mongoClient.db("Canvas").collection("Save");
+                let cursor = await pictures.find();
+                let response = await cursor.toArray();
+                let jsonString = JSON.stringify(response);
+                _response.write(jsonString);
             }
-            let jsonString = JSON.stringify(url.query);
-            _response.write(jsonString);
-            storeOrder(url.query);
+            else {
+                let url = Url.parse(_request.url, true);
+                for (let key in url.query) {
+                    _response.write(key + ":" + url.query[key] + "<br/>");
+                }
+                let jsonString = JSON.stringify(url.query);
+                _response.write(jsonString);
+                storeOrder(url.query);
+            }
         }
         _response.end();
     }
