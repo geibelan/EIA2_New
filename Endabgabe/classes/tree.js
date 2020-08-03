@@ -6,13 +6,13 @@ var magicalCanvas;
             magicalCanvas.crc2.lineWidth = 2;
             magicalCanvas.crc2.fillStyle = "brown";
             magicalCanvas.crc2.strokeStyle = "brown";
-            if (this.selected == true) {
+            if (this.selected == true) { //if symbol selected after placing on canvas, then draw a red outline if clicked on again 
                 magicalCanvas.crc2.strokeStyle = "#ff0000";
                 magicalCanvas.crc2.lineWidth = 5;
             }
             magicalCanvas.crc2.save();
             magicalCanvas.crc2.translate(this.x, this.y);
-            magicalCanvas.crc2.rotate((0 + this.setRotation + this.rotation) * Math.PI / 180);
+            magicalCanvas.crc2.rotate((0 + this.setRotation + this.rotation) * Math.PI / 180); //setRotation for edit box, rotation for the whipping 
             magicalCanvas.crc2.translate(-this.x, -this.y);
             magicalCanvas.crc2.beginPath();
             magicalCanvas.crc2.moveTo(this.x, this.y);

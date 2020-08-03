@@ -31,7 +31,7 @@ namespace magicalCanvas {
       crc2.fill();
       crc2.restore();
 
-      this.size = (10* this.setScale) * this.scale;
+      this.size = (10 * this.setScale) * this.scale;
     }
 
 

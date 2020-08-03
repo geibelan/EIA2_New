@@ -16,7 +16,7 @@ var magicalCanvas;
             magicalCanvas.crc2.rotate((0 + this.setRotation) * Math.PI / 180);
             magicalCanvas.crc2.translate(-this.x, -this.y);
             magicalCanvas.crc2.beginPath();
-            magicalCanvas.crc2.moveTo(this.x, this.y); //170,80
+            magicalCanvas.crc2.moveTo(this.x, this.y);
             magicalCanvas.crc2.bezierCurveTo(this.x - 20 * this.setScale, this.y + 10 * this.setScale, this.x - 20 * this.setScale, this.y + 35 * this.setScale, this.x + 30 * this.setScale, this.y + 35 * this.setScale);
             magicalCanvas.crc2.bezierCurveTo(this.x + 40 * this.setScale, this.y + 50 * this.setScale, this.x + 75 * this.setScale, this.y + 50 * this.setScale, this.x + 85 * this.setScale, this.y + 35 * this.setScale);
             magicalCanvas.crc2.bezierCurveTo(this.x + 125 * this.setScale, this.y + 35 * this.setScale, this.x + 125 * this.setScale, this.y + 20 * this.setScale, this.x + 110 * this.setScale, this.y + 10 * this.setScale);

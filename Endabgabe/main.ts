@@ -461,13 +461,15 @@ namespace magicalCanvas {
             let image: HTMLDivElement = document.createElement("div"); //create div for image
             image.innerHTML = "Load Image " + (i + 1) + " | " + loadData[i]["bg"];
             image.setAttribute("id", i + "");
-            loadScreen.appendChild(image);
+            loadScreen.appendChild(image); //add div to parent div (load screen)
             image.addEventListener("click", continuePicture);
 
         }
 
     }
 
+    //reload selected picture, redraw saved bg and redraw symbols with saved data
+    //startPicture similar as if new picture
     function continuePicture(_event: MouseEvent): void {
 
         let index: number = Number((<HTMLDivElement>_event.target).getAttribute("id"));

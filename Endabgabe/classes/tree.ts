@@ -1,20 +1,21 @@
 namespace magicalCanvas {
 
     export class Tree extends Symbol {
+
         draw(): void {
 
             crc2.lineWidth = 2;
             crc2.fillStyle = "brown";
             crc2.strokeStyle = "brown";
 
-            if (this.selected == true) {
+            if (this.selected == true) {//if symbol selected after placing on canvas, then draw a red outline if clicked on again 
                 crc2.strokeStyle = "#ff0000";
                 crc2.lineWidth = 5;
             }
 
             crc2.save();
             crc2.translate(this.x, this.y);
-            crc2.rotate((0 + this.setRotation + this.rotation) * Math.PI / 180);
+            crc2.rotate((0 + this.setRotation + this.rotation) * Math.PI / 180); //setRotation for edit box, rotation for the whipping 
             crc2.translate(-this.x, -this.y);
             crc2.beginPath();
             crc2.moveTo(this.x, this.y);
