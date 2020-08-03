@@ -52,7 +52,7 @@ export namespace magicalCanvas {
                 console.log("Load");
                 //let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
                 let cursor: Mongo.Cursor<any> = await images.find();
-                await cursor.forEach(showOrders);
+                await cursor.forEach(getImages);
                 let jsonString: string = JSON.stringify(load);
                 _response.write(jsonString);
                 load = [];
@@ -67,21 +67,18 @@ export namespace magicalCanvas {
                 let jsonString: string = JSON.stringify(url.query);
                 _response.write(jsonString);
 
-                storeOrder(<Drawing>url.query);
+                saveImages(<Drawing>url.query);
             }
         }
 
         _response.end();
     }
 
-    function showOrders(_item: object): void {
-       
+    function getImages(_item: object): void {
             load.push( _item);
-
     }
 
-
-    function storeOrder(_img: Drawing): void {
+    function saveImages(_img: Drawing): void {
         images.insert(_img);
     }
 }

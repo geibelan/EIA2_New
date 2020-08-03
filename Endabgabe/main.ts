@@ -62,6 +62,9 @@ namespace magicalCanvas {
         let bgScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("show-bg");
         bgScreen.style.display = "none";
 
+        let loadScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("show-load");
+        loadScreen.style.display = "none";
+
         drawBG();
 
         //resizing the entire canvas
@@ -100,13 +103,14 @@ namespace magicalCanvas {
             placeSymbol();
         });
 
-        //left mouse button released, symbol won't move anymore
+        //Drag and Drop as in: https://developer.mozilla.org/en-US/docs/Web/API/Element/mousemove_event
+        //mouse is moving, moving symbol with it, own function
+        canvas.addEventListener("mousemove", moveSymbol);
+
+        //left mouse button released on Canvas, symbol won't move anymore
         canvas.addEventListener("mouseup", function (): void {
             move = false;
         });
-
-        //mouse is moving, moving symbol with it, own function
-        canvas.addEventListener("mousemove", moveSymbol);
 
         //finding symbol? checking if the event listener is being run when you click on a symbol, I guess
         canvas.addEventListener("click", findSymbol);
@@ -118,7 +122,7 @@ namespace magicalCanvas {
         document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
         document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
         document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
-        document.getElementById("save")?.addEventListener("click", sendImage);
+        document.getElementById("save")?.addEventListener("click", savePicture);
 
         update();
     }
@@ -412,10 +416,10 @@ namespace magicalCanvas {
         window.requestAnimationFrame(update);
     }
 
-    ////////////////////////////
+
     let url: string = "https://eiabalance.herokuapp.com/";
 
-    async function sendImage(_event: Event): Promise<void> {
+    async function savePicture(_event: Event): Promise<void> {
         console.log("Send");
         let formData: FormData = new FormData();
         formData.append("draw", JSON.stringify(symbols));
@@ -427,20 +431,153 @@ namespace magicalCanvas {
         let query: URLSearchParams = new URLSearchParams(<any>formData);
         let response: Response = await fetch(url + "?" + query.toString());
         let responseText: string = await response.text();
-        alert(responseText);
+        alert("Saved: " + responseText);
 
     }
 
     async function loadFromDB(_event: Event): Promise<void> {
-        console.log("Load");
+
         let formData: FormData = new FormData();
         formData.append("load", "all");
 
         let query: URLSearchParams = new URLSearchParams(<any>formData);
         let response: Response = await fetch(url + "?" + query.toString());
         let responseText: string = await response.text();
-        alert(responseText);
-        console.log(JSON.parse(responseText));
+        loadPicture(responseText);
+
+    }
+
+    let loadData: any;
+
+    function loadPicture(_load: string): void {
+
+        loadData = JSON.parse(_load);
+
+        let startScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("title-page");
+        startScreen.style.display = "none";
+
+        let loadScreen: HTMLDivElement = <HTMLDivElement>document.getElementById("show-load");
+        loadScreen.style.display = "block";
+
+        for (let i: number = 0; i < loadData.length; i++) {
+            let image: HTMLDivElement = document.createElement("div");
+            image.innerHTML = "Load Image " + (i + 1) + " | " + loadData[i]["bg"];
+            image.setAttribute("id", i + "");
+            loadScreen.appendChild(image);
+            image.addEventListener("click", continuePicture)
+
+        }
+
+    }
+
+    function continuePicture(_event: MouseEvent): void {
+
+        let index: number = Number((<HTMLDivElement>_event.target).getAttribute("id"));
+        let load: any = loadData[index];
+
+        if (load["bg"] == "Day") {
+            day = true;
+        } else {
+            day = false;
+        }
+
+        startPicture();
+
+        let loadedSymbols: Symbol[] = JSON.parse(load["draw"]);
+        for (let i: number = 0; loadedSymbols.length > i; i++) {
+
+
+            if (loadedSymbols[i].name == "star") {
+                star = new Star();
+                star.name = "star";
+                star.rotateRight = loadedSymbols[i].rotateRight;
+                star.rotation = loadedSymbols[i].rotation;
+                star.scale = loadedSymbols[i].scale;
+                star.scaleUp = loadedSymbols[i].scaleUp;
+                star.setRotation = loadedSymbols[i].setRotation;
+                star.setScale = loadedSymbols[i].setScale;
+                star.size = loadedSymbols[i].size;
+                star.x = loadedSymbols[i].x;
+                star.y = loadedSymbols[i].y;
+                symbols.push(star);
+
+            }
+
+            if (loadedSymbols[i].name == "moon") {
+                moon = new Moon();
+                moon.name = "moon";
+                moon.rotateRight = loadedSymbols[i].rotateRight;
+                moon.rotation = loadedSymbols[i].rotation;
+                moon.scale = loadedSymbols[i].scale;
+                moon.scaleUp = loadedSymbols[i].scaleUp;
+                moon.setRotation = loadedSymbols[i].setRotation;
+                moon.setScale = loadedSymbols[i].setScale;
+                moon.size = loadedSymbols[i].size;
+                moon.x = loadedSymbols[i].x;
+                moon.y = loadedSymbols[i].y;
+                symbols.push(moon);
+            }
+
+            if (loadedSymbols[i].name == "sun") {
+                sun = new Sun();
+                sun.name = "sun";
+                sun.rotateRight = loadedSymbols[i].rotateRight;
+                sun.rotation = loadedSymbols[i].rotation;
+                sun.scale = loadedSymbols[i].scale;
+                sun.scaleUp = loadedSymbols[i].scaleUp;
+                sun.setRotation = loadedSymbols[i].setRotation;
+                sun.setScale = loadedSymbols[i].setScale;
+                sun.size = loadedSymbols[i].size;
+                sun.x = loadedSymbols[i].x;
+                sun.y = loadedSymbols[i].y;
+                symbols.push(sun);
+            }
+
+            if (loadedSymbols[i].name == "tree") {
+                tree = new Tree();
+                tree.name = "tree";
+                tree.rotateRight = loadedSymbols[i].rotateRight;
+                tree.rotation = loadedSymbols[i].rotation;
+                tree.scale = loadedSymbols[i].scale;
+                tree.scaleUp = loadedSymbols[i].scaleUp;
+                tree.setRotation = loadedSymbols[i].setRotation;
+                tree.setScale = loadedSymbols[i].setScale;
+                tree.size = loadedSymbols[i].size;
+                tree.x = loadedSymbols[i].x;
+                tree.y = loadedSymbols[i].y;
+                symbols.push(tree);
+            }
+
+            if (loadedSymbols[i].name == "cloud") {
+                cloud = new Cloud();
+                cloud.name = "cloud";
+                cloud.rotateRight = loadedSymbols[i].rotateRight;
+                cloud.rotation = loadedSymbols[i].rotation;
+                cloud.scale = loadedSymbols[i].scale;
+                cloud.scaleUp = loadedSymbols[i].scaleUp;
+                cloud.setRotation = loadedSymbols[i].setRotation;
+                cloud.setScale = loadedSymbols[i].setScale;
+                cloud.size = loadedSymbols[i].size;
+                cloud.x = loadedSymbols[i].x;
+                cloud.y = loadedSymbols[i].y;
+                symbols.push(cloud);
+            }
+
+            if (loadedSymbols[i].name == "house") {
+                house = new House();
+                house.name = "house";
+                house.rotateRight = loadedSymbols[i].rotateRight;
+                house.rotation = loadedSymbols[i].rotation;
+                house.scale = loadedSymbols[i].scale;
+                house.scaleUp = loadedSymbols[i].scaleUp;
+                house.setRotation = loadedSymbols[i].setRotation;
+                house.setScale = loadedSymbols[i].setScale;
+                house.size = loadedSymbols[i].size;
+                house.x = loadedSymbols[i].x;
+                house.y = loadedSymbols[i].y;
+                symbols.push(house);
+            }
+        }
 
     }
 

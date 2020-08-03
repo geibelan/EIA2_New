@@ -39,7 +39,7 @@ var magicalCanvas;
                 console.log("Load");
                 //let pictures: Mongo.Collection<any> = mongoClient.db("Canvas").collection("Save");
                 let cursor = await images.find();
-                await cursor.forEach(showOrders);
+                await cursor.forEach(getImages);
                 let jsonString = JSON.stringify(load);
                 _response.write(jsonString);
                 load = [];
@@ -51,15 +51,15 @@ var magicalCanvas;
                 }
                 let jsonString = JSON.stringify(url.query);
                 _response.write(jsonString);
-                storeOrder(url.query);
+                saveImages(url.query);
             }
         }
         _response.end();
     }
-    function showOrders(_item) {
+    function getImages(_item) {
         load.push(_item);
     }
-    function storeOrder(_img) {
+    function saveImages(_img) {
         images.insert(_img);
     }
 })(magicalCanvas = exports.magicalCanvas || (exports.magicalCanvas = {}));

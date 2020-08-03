@@ -63,9 +63,7 @@ namespace magicalCanvas {
             }
         }
 
-        edit() {
-
-        }
+    
     }
 
 }

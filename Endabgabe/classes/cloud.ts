@@ -2,6 +2,7 @@ namespace magicalCanvas {
 
     export class Cloud extends Symbol {
 
+        //https://stackoverflow.com/questions/19541192/how-to-draw-cloud-shape-in-html5-canvas
         draw(): void {
             crc2.fillStyle = "#DFE5E5";
             crc2.strokeStyle = "#DFE5E5";

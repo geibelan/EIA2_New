@@ -44,6 +44,8 @@ var magicalCanvas;
         startScreen.style.display = "block";
         let bgScreen = document.getElementById("show-bg");
         bgScreen.style.display = "none";
+        let loadScreen = document.getElementById("show-load");
+        loadScreen.style.display = "none";
         drawBG();
         //resizing the entire canvas
         scale = document.getElementById("scale");
@@ -74,12 +76,13 @@ var magicalCanvas;
             type = "tree";
             placeSymbol();
         });
-        //left mouse button released, symbol won't move anymore
+        //Drag and Drop as in: https://developer.mozilla.org/en-US/docs/Web/API/Element/mousemove_event
+        //mouse is moving, moving symbol with it, own function
+        magicalCanvas.canvas.addEventListener("mousemove", moveSymbol);
+        //left mouse button released on Canvas, symbol won't move anymore
         magicalCanvas.canvas.addEventListener("mouseup", function () {
             move = false;
         });
-        //mouse is moving, moving symbol with it, own function
-        magicalCanvas.canvas.addEventListener("mousemove", moveSymbol);
         //finding symbol? checking if the event listener is being run when you click on a symbol, I guess
         magicalCanvas.canvas.addEventListener("click", findSymbol);
         //installing event listener for the editing box that pops up when clicking on a set symbol
@@ -89,7 +92,7 @@ var magicalCanvas;
         document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
         document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
         document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
-        document.getElementById("save")?.addEventListener("click", sendImage);
+        document.getElementById("save")?.addEventListener("click", savePicture);
         update();
     }
     let selectedSymbol;
@@ -331,9 +334,8 @@ var magicalCanvas;
         }
         window.requestAnimationFrame(update);
     }
-    ////////////////////////////
     let url = "https://eiabalance.herokuapp.com/";
-    async function sendImage(_event) {
+    async function savePicture(_event) {
         console.log("Send");
         let formData = new FormData();
         formData.append("draw", JSON.stringify(symbols));
@@ -346,17 +348,128 @@ var magicalCanvas;
         let query = new URLSearchParams(formData);
         let response = await fetch(url + "?" + query.toString());
         let responseText = await response.text();
-        alert(responseText);
+        alert("Saved: " + responseText);
     }
     async function loadFromDB(_event) {
-        console.log("Load");
         let formData = new FormData();
         formData.append("load", "all");
         let query = new URLSearchParams(formData);
         let response = await fetch(url + "?" + query.toString());
         let responseText = await response.text();
-        alert(responseText);
-        console.log(JSON.parse(responseText));
+        loadPicture(responseText);
+    }
+    let loadData;
+    function loadPicture(_load) {
+        loadData = JSON.parse(_load);
+        let startScreen = document.getElementById("title-page");
+        startScreen.style.display = "none";
+        let loadScreen = document.getElementById("show-load");
+        loadScreen.style.display = "block";
+        for (let i = 0; i < loadData.length; i++) {
+            let image = document.createElement("div");
+            image.innerHTML = "Load Image " + (i + 1) + " | " + loadData[i]["bg"];
+            image.setAttribute("id", i + "");
+            loadScreen.appendChild(image);
+            image.addEventListener("click", continuePicture);
+        }
+    }
+    function continuePicture(_event) {
+        let index = Number(_event.target.getAttribute("id"));
+        let load = loadData[index];
+        if (load["bg"] == "Day") {
+            day = true;
+        }
+        else {
+            day = false;
+        }
+        startPicture();
+        let loadedSymbols = JSON.parse(load["draw"]);
+        for (let i = 0; loadedSymbols.length > i; i++) {
+            if (loadedSymbols[i].name == "star") {
+                star = new magicalCanvas.Star();
+                star.name = "star";
+                star.rotateRight = loadedSymbols[i].rotateRight;
+                star.rotation = loadedSymbols[i].rotation;
+                star.scale = loadedSymbols[i].scale;
+                star.scaleUp = loadedSymbols[i].scaleUp;
+                star.setRotation = loadedSymbols[i].setRotation;
+                star.setScale = loadedSymbols[i].setScale;
+                star.size = loadedSymbols[i].size;
+                star.x = loadedSymbols[i].x;
+                star.y = loadedSymbols[i].y;
+                symbols.push(star);
+            }
+            if (loadedSymbols[i].name == "moon") {
+                moon = new magicalCanvas.Moon();
+                moon.name = "moon";
+                moon.rotateRight = loadedSymbols[i].rotateRight;
+                moon.rotation = loadedSymbols[i].rotation;
+                moon.scale = loadedSymbols[i].scale;
+                moon.scaleUp = loadedSymbols[i].scaleUp;
+                moon.setRotation = loadedSymbols[i].setRotation;
+                moon.setScale = loadedSymbols[i].setScale;
+                moon.size = loadedSymbols[i].size;
+                moon.x = loadedSymbols[i].x;
+                moon.y = loadedSymbols[i].y;
+                symbols.push(moon);
+            }
+            if (loadedSymbols[i].name == "sun") {
+                sun = new magicalCanvas.Sun();
+                sun.name = "sun";
+                sun.rotateRight = loadedSymbols[i].rotateRight;
+                sun.rotation = loadedSymbols[i].rotation;
+                sun.scale = loadedSymbols[i].scale;
+                sun.scaleUp = loadedSymbols[i].scaleUp;
+                sun.setRotation = loadedSymbols[i].setRotation;
+                sun.setScale = loadedSymbols[i].setScale;
+                sun.size = loadedSymbols[i].size;
+                sun.x = loadedSymbols[i].x;
+                sun.y = loadedSymbols[i].y;
+                symbols.push(sun);
+            }
+            if (loadedSymbols[i].name == "tree") {
+                tree = new magicalCanvas.Tree();
+                tree.name = "tree";
+                tree.rotateRight = loadedSymbols[i].rotateRight;
+                tree.rotation = loadedSymbols[i].rotation;
+                tree.scale = loadedSymbols[i].scale;
+                tree.scaleUp = loadedSymbols[i].scaleUp;
+                tree.setRotation = loadedSymbols[i].setRotation;
+                tree.setScale = loadedSymbols[i].setScale;
+                tree.size = loadedSymbols[i].size;
+                tree.x = loadedSymbols[i].x;
+                tree.y = loadedSymbols[i].y;
+                symbols.push(tree);
+            }
+            if (loadedSymbols[i].name == "cloud") {
+                cloud = new magicalCanvas.Cloud();
+                cloud.name = "cloud";
+                cloud.rotateRight = loadedSymbols[i].rotateRight;
+                cloud.rotation = loadedSymbols[i].rotation;
+                cloud.scale = loadedSymbols[i].scale;
+                cloud.scaleUp = loadedSymbols[i].scaleUp;
+                cloud.setRotation = loadedSymbols[i].setRotation;
+                cloud.setScale = loadedSymbols[i].setScale;
+                cloud.size = loadedSymbols[i].size;
+                cloud.x = loadedSymbols[i].x;
+                cloud.y = loadedSymbols[i].y;
+                symbols.push(cloud);
+            }
+            if (loadedSymbols[i].name == "house") {
+                house = new magicalCanvas.House();
+                house.name = "house";
+                house.rotateRight = loadedSymbols[i].rotateRight;
+                house.rotation = loadedSymbols[i].rotation;
+                house.scale = loadedSymbols[i].scale;
+                house.scaleUp = loadedSymbols[i].scaleUp;
+                house.setRotation = loadedSymbols[i].setRotation;
+                house.setScale = loadedSymbols[i].setScale;
+                house.size = loadedSymbols[i].size;
+                house.x = loadedSymbols[i].x;
+                house.y = loadedSymbols[i].y;
+                symbols.push(house);
+            }
+        }
     }
     window.addEventListener("load", handleLoad);
 })(magicalCanvas || (magicalCanvas = {}));

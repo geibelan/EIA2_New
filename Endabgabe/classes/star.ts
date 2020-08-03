@@ -2,10 +2,10 @@ namespace magicalCanvas {
 
   export class Star extends Symbol {
 
-
+    //https://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
     draw(): void {
       var alpha: number = (2 * Math.PI) / 10;
-      console.log(this.setScale);
+      
       var radius: number = (10 * this.setScale) * this.scale;
       var starXY: number[] = [this.x, this.y];
 

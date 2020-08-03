@@ -2,9 +2,9 @@
 var magicalCanvas;
 (function (magicalCanvas) {
     class Star extends magicalCanvas.Symbol {
+        //https://stackoverflow.com/questions/14580033/algorithm-for-drawing-a-5-point-star
         draw() {
             var alpha = (2 * Math.PI) / 10;
-            console.log(this.setScale);
             var radius = (10 * this.setScale) * this.scale;
             var starXY = [this.x, this.y];
             magicalCanvas.crc2.save();

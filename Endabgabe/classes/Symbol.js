@@ -50,8 +50,6 @@ var magicalCanvas;
                 this.rotateRight = true;
             }
         }
-        edit() {
-        }
     }
     magicalCanvas.Symbol = Symbol;
 })(magicalCanvas || (magicalCanvas = {}));
