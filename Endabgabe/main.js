@@ -335,7 +335,13 @@ var magicalCanvas;
     async function sendImage(_event) {
         console.log("Send order");
         let formData = new FormData();
-        formData.append("type", "sun");
+        formData.append("draw", JSON.stringify(symbols));
+        if (day == true) {
+            formData.append("bg", "Day");
+        }
+        else {
+            formData.append("bg", "Night");
+        }
         let query = new URLSearchParams(formData);
         let response = await fetch(url + "?" + query.toString());
         let responseText = await response.text();
