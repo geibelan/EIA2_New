@@ -88,7 +88,7 @@ var magicalCanvas;
         document.getElementById("newPosition")?.addEventListener("click", rePositionSymbol);
         document.getElementById("rotate")?.addEventListener("input", rotateSymbol);
         document.getElementById("scale-symbol")?.addEventListener("input", scaleSymbol);
-        document.getElementById("savel")?.addEventListener("click", sendImage);
+        document.getElementById("save")?.addEventListener("click", sendImage);
         update();
     }
     let selectedSymbol;
